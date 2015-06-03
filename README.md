@@ -10,7 +10,7 @@ The latest version is 4.2.2, [click here to download](https://github.com/haiwen/
 
 ## Reporting Issues
 
-If you have any problems or suggestions when using the seafile rpi server pacagke, please report it on [seafile server forum](https://forum.seafile-server.org/).
+If you have any problems or suggestions when using the seafile rpi server package, please report it on [seafile server forum](https://forum.seafile-server.org/).
 
 ## Contributors
 
