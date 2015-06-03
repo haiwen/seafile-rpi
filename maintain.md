@@ -4,7 +4,7 @@ Please check [the official document](http://manual.seafile.com/build_seafile/rpi
 
 # Release a new version
 
-- Make sure the pacakge has been tested
+- Make sure the package has been tested
 - Create a new release on https://github.com/haiwen/seafile-rpi/releases/new
 - Release title should be like "Seafile server 4.1.2 for Raspberry Pi"
 - Upload the packages there.
