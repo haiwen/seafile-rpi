@@ -2,7 +2,7 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 
 ## Download
 
-The latest stable rpi version is 5.0.2, [click here to download](https://github.com/haiwen/seafile-rpi/releases/download/v4.4.6/seafile-server_stable_5.0.2_pi.tar.gz).
+The latest stable rpi version is 5.0.2, [click here to download](https://github.com/haiwen/seafile-rpi/releases/download/v5.0.2/seafile-server_stable_5.0.2_pi.tar.gz).
 
 ## Manual and Guides
 
