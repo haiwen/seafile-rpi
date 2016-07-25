@@ -10,7 +10,7 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 
 ## Reporting Issues
 
-If you have any problems or suggestions when using the seafile rpi server package, please report it on [seafile server forum](https://forum.server.com/).
+If you have any problems or suggestions when using the seafile rpi server package, please report it on [seafile server forum](https://forum.seafile.com/).
 
 ## Contributors
 
