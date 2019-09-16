@@ -96,7 +96,7 @@ install_python_thirdparty()
   mkdir -p $THIRDPARTYFOLDER
   export PYTHONPATH=$THIRDPARTYFOLDER
 
-  pip install --target=$PYTHONPATH --no-deps \
+  pip install --target=$PYTHONPATH --no-deps --upgrade \
     pytz==2016.1 \
     Django==1.8.10 \
     django-statici18n==1.1.3 \
@@ -317,6 +317,8 @@ build_libsearpc
 build_ccnet
 build_seafile
 build_seahub
+build_seafobj
+build_seafdav
 
 copy_pkg_source
 build_server
