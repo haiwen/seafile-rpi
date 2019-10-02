@@ -12,7 +12,7 @@ PKGDIR=seafile-server-pkgs
 
 LIBSEARPC_VERSION=3.1.0
 LIBSEARPC_TAG=v$LIBSEARPC_VERSION
-VERSION=7.0.4
+VERSION=7.0.5
 VERSION_TAG=v$VERSION-server
 VERSION_CCNET=6.0.1 # seafile/ccnet has not consistent version (see configure.ac)
 VERSION_SEAFILE=6.0.1
@@ -71,7 +71,7 @@ build_libevhtp()
 
   if [ -d "libevhtp" ]; then
     cd libevhtp
-    git checkout master
+    git reset --hard origin/master
     git pull
   else
     git clone https://www.github.com/haiwen/libevhtp.git
@@ -105,7 +105,7 @@ build_libsearpc()
   cd $BUILDFOLDER
   if [ -d "libsearpc" ]; then
     cd libsearpc
-    git checkout master
+    git reset --hard origin/master
     git pull
   else
     git clone https://github.com/haiwen/libsearpc.git
@@ -128,7 +128,7 @@ build_ccnet()
   cd $BUILDFOLDER
   if [ -d "ccnet-server" ]; then
     cd ccnet-server
-    git checkout master
+    git reset --hard origin/master
     git pull
   else
     git clone https://github.com/haiwen/ccnet-server.git
@@ -151,7 +151,7 @@ build_seafile()
   cd $BUILDFOLDER
   if [ -d "seafile-server" ]; then
     cd seafile-server
-    git checkout master
+    git reset --hard origin/master
     git pull
   else
     git clone https://github.com/haiwen/seafile-server.git
@@ -177,7 +177,7 @@ build_seahub()
   cd $BUILDFOLDER
   if [ -d "seahub" ]; then
     cd seahub
-    git checkout master
+    git reset --hard origin/master
     git pull
   else
     git clone https://github.com/haiwen/seahub.git
@@ -214,7 +214,7 @@ build_seafobj()
   cd $BUILDFOLDER
   if [ -d "seafobj" ]; then
     cd seafobj
-    git checkout master
+    git reset --hard origin/master
     git pull
   else
     git clone https://github.com/haiwen/seafobj.git
@@ -235,7 +235,7 @@ build_seafdav()
   cd $BUILDFOLDER
   if [ -d "seafdav" ]; then
     cd seafdav
-    git checkout master
+    git reset --hard origin/master
     git pull
   else
     git clone https://github.com/haiwen/seafdav.git
