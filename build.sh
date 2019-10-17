@@ -111,7 +111,7 @@ build_libsearpc()
     git clone https://github.com/haiwen/libsearpc.git
     cd libsearpc
   fi
-  git reset --hard $VERSION_TAG
+  git reset --hard $LIBSEARPC_TAG
   ./autogen.sh
   ./configure
   make dist
