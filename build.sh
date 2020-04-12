@@ -195,8 +195,9 @@ build_seahub()
   mkdir -p $THIRDPARTYFOLDER
   export PYTHONPATH=$THIRDPARTYFOLDER
 
+  # temporary fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=896652
   if ! [ -x "$(command -v easy_install)" ]; then
-    pip install easy_install
+    pip install -U setuptools
   fi
   while read line; do easy_install -d $THIRDPARTYFOLDER $line; done < requirements.txt
 
