@@ -42,7 +42,7 @@ install_dependencies()
     uuid-dev \
     intltool \
     libsqlite3-dev \
-    libmysqlclient-dev \
+    libmariadb-dev \
     libarchive-dev \
     libtool \
     libjansson-dev \
@@ -53,8 +53,8 @@ install_dependencies()
     python-setuptools \
     cmake \
     libpq-dev \
-    ldap-client \
-    libldap-dev \
+    ldap-utils \
+    libldap2-dev \
     libonig-dev
 }
 
@@ -186,7 +186,7 @@ build_seahub()
   git reset --hard $VERSION_TAG
 
   # get and build python dependencies
-  apt-get install -y libxml2-dev libxslt-dev
+  apt-get install -y libxml2-dev libxslt1-dev
 
   mkdir -p $THIRDPARTYFOLDER
   export PYTHONPATH=$THIRDPARTYFOLDER
