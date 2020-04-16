@@ -55,7 +55,8 @@ install_dependencies()
     libpq-dev \
     ldap-utils \
     libldap2-dev \
-    libonig-dev
+    libonig-dev \
+    libssl-dev
 }
 
 #
