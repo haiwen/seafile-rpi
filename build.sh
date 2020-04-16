@@ -189,6 +189,9 @@ build_seahub()
   # get and build python dependencies
   apt-get install -y libxml2-dev libxslt1-dev
 
+  # get Pillow dependencies
+  apt-get install libjpeg-dev zlib1g-dev
+
   mkdir -p $THIRDPARTYFOLDER
   export PYTHONPATH=$THIRDPARTYFOLDER
 
