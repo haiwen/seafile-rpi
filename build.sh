@@ -42,7 +42,7 @@ install_dependencies()
     uuid-dev \
     intltool \
     libsqlite3-dev \
-    libmysqlclient-dev \
+    libmariadb-dev \
     libarchive-dev \
     libtool \
     libjansson-dev \
@@ -53,9 +53,10 @@ install_dependencies()
     python-setuptools \
     cmake \
     libpq-dev \
-    ldap-client \
-    libldap-dev \
-    libonig-dev
+    ldap-utils \
+    libldap2-dev \
+    libonig-dev \
+    libssl-dev
 }
 
 #
@@ -186,13 +187,17 @@ build_seahub()
   git reset --hard $VERSION_TAG
 
   # get and build python dependencies
-  apt-get install libxml2-dev libxslt-dev
+  apt-get install -y libxml2-dev libxslt1-dev
+
+  # get Pillow dependencies
+  apt-get install libjpeg-dev zlib1g-dev
 
   mkdir -p $THIRDPARTYFOLDER
   export PYTHONPATH=$THIRDPARTYFOLDER
 
+  # temporary fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=896652
   if ! [ -x "$(command -v easy_install)" ]; then
-    pip install easy_install
+    pip install -U setuptools
   fi
   while read line; do easy_install -d $THIRDPARTYFOLDER $line; done < requirements.txt
 
