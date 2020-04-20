@@ -42,7 +42,7 @@ install_dependencies()
     uuid-dev \
     intltool \
     libsqlite3-dev \
-    libmariadb-dev \
+    default-libmysqlclient-dev \
     libarchive-dev \
     libtool \
     libjansson-dev \
