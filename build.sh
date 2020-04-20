@@ -42,7 +42,7 @@ install_dependencies()
     uuid-dev \
     intltool \
     libsqlite3-dev \
-    libmariadb-dev \
+    default-libmysqlclient-dev \
     libarchive-dev \
     libtool \
     libjansson-dev \
@@ -190,7 +190,7 @@ build_seahub()
   apt-get install -y libxml2-dev libxslt1-dev
 
   # get Pillow dependencies
-  apt-get install libjpeg-dev zlib1g-dev
+  apt-get install -y libjpeg-dev zlib1g-dev
 
   mkdir -p $THIRDPARTYFOLDER
   export PYTHONPATH=$THIRDPARTYFOLDER
