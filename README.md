@@ -9,7 +9,7 @@ For Seafile versions which use Python 3. Seafile versions higher than 7.0.
 
 E.g. to compile Seafile server v7.1.4:
 ```
-$ wget https://github.com/haiwen/seafile-rpi/blob/master/build3.sh
+$ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build3.sh
 $ chmod u+x build3.sh
 $ ./build3.sh 7.1.4
 ```
