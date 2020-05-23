@@ -13,6 +13,26 @@ $ wget https://github.com/haiwen/seafile-rpi/blob/master/build3.sh
 $ chmod u+x build3.sh
 $ ./build3.sh 7.1.4
 ```
+Schema of created directory structure
+```
+seafile@rpi-bionic:~$ ll
+-rwxr--r-- 1 seafile seafile 7391 May 20 21:44 build3.sh
+drwxr-xr-x 1 seafile seafile   60 May 20 21:18 built-seafile-server-pkgs
+drwxr-xr-x 1 seafile seafile  214 May 20 21:14 built-seafile-sources
+drwxr-xr-x 1 seafile seafile  160 May 20 21:14 haiwen-build
+.
+├── built-seafile-server-pkgs
+├── built-seafile-sources
+└── haiwen-build
+    ├── ccnet-server
+    ├── libevhtp
+    ├── libsearpc
+    ├── seafdav
+    ├── seafile-server
+    ├── seafobj
+    ├── seahub
+    └── seahub_thirdparty
+```
 
 For Sefile versions which use Python 2. Seafile versions lower than 7.1, e.g. v7.0.5:
 ```
