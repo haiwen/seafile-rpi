@@ -5,7 +5,16 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 - The latest **stable** rpi version is 7.0.5, [click here to download](https://github.com/haiwen/seafile-rpi/releases/download/v7.0.5/seafile-server_7.0.5_stable_pi.tar.gz).
 
 ## Build
+For Sefile versions which use Python 3. Seafile versions higher than 7.0.
 
+E.g. to compile Seafile server v7.1.4:
+```
+$ wget https://github.com/haiwen/seafile-rpi/blob/master/build3.sh
+$ chmod u+x build3.sh
+$ ./build3.sh 7.1.4
+```
+
+For Sefile versions which use Python 2. Seafile versions lower than 7.1, e.g. v7.0.5:
 ```
 $ git clone https://github.com/haiwen/seafile-rpi.git
 $ cd seafile-rpi
