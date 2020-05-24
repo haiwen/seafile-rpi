@@ -59,6 +59,9 @@ install_dependencies()
      libsqlite3-dev \
      libssl-dev \
      libtool \
+     libxml2-dev \
+     libxslt-dev \
+     python3-lxml \
      python3-setuptools \
      uuid-dev \
      valac)
