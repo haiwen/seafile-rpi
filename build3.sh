@@ -193,7 +193,7 @@ install_thirdparty()
 
   # get and install Pillow dependencies
   echo -e "\e[93m   Get and install Pillow dependencies\e[39m\n"
-  (set -x; sudo apt-get install -y libjpeg-dev zlib1g-dev libtiff5-dev libfreetype6-dev)
+  (set -x; sudo apt-get install -y libjpeg-dev zlib1g-dev libtiff5-dev libfreetype6-dev libwebp-dev)
 
   # get and install pip(3) from linux distro
   echo -e "\n\e[93m   Get and install pip(3) from linux distro\e[39m\n"
