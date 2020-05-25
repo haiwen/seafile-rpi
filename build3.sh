@@ -178,7 +178,7 @@ build_seafile()
     (set -x; git clone https://github.com/haiwen/seafile-server.git)
     cd seafile-server
   fi
-  (set -x; git reset --hard master) #it is harmless if != $VERSION_TAG
+  (set -x; git reset --hard $VERSION_TAG)
   (set -x; ./autogen.sh)
   (set -x; ./configure --with-mysql=$MYSQL_CONFIG_PATH)
   (set -x; make dist)
