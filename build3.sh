@@ -79,6 +79,7 @@ build_libevhtp()
 
   if [ -d "libevhtp" ]; then
     cd libevhtp
+    (set -x; make clean)
     (set -x; git reset --hard origin/master)
     (set -x; git pull)
   else
@@ -122,6 +123,7 @@ build_libsearpc()
   cd $BUILDFOLDER
   if [ -d "libsearpc" ]; then
     cd libsearpc
+    (set -x; make clean && make distclean)
     (set -x; git reset --hard origin/master)
     (set -x; git pull)
   else
@@ -147,6 +149,7 @@ build_ccnet()
   cd $BUILDFOLDER
   if [ -d "ccnet-server" ]; then
     cd ccnet-server
+    (set -x; make clean && make distclean)
     (set -x; git reset --hard origin/master)
     (set -x; git pull)
   else
@@ -172,6 +175,7 @@ build_seafile()
   cd $BUILDFOLDER
   if [ -d "seafile-server" ]; then
     cd seafile-server
+    (set -x; make clean && make distclean)
     (set -x; git reset --hard origin/master)
     (set -x; git pull)
   else
@@ -231,6 +235,7 @@ build_seahub()
   cd $BUILDFOLDER
   if [ -d "seahub" ]; then
     cd seahub
+    (set -x; make clean)
     (set -x; git reset --hard origin/master)
     (set -x; git pull)
   else
