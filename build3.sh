@@ -22,6 +22,7 @@ VERSION_CCNET=6.0.1 # ccnet has not consistent version (see configure.ac)
 VERSION_SEAFILE=6.0.1 # ebenda for seafile
 MYSQL_CONFIG_PATH=/usr/bin/mysql_config # ensure compilation with mysql support
 PYTHON_REQUIREMENTS_URL_SEAHUB=https://raw.githubusercontent.com/haiwen/seahub/master/requirements.txt
+PYTHON_REQUIREMENTS_URL_SEAFDAV=https://raw.githubusercontent.com/jobenvil/seafdav/master/requirements_SeafDAV.txt
 
 STEPS=12
 
@@ -213,13 +214,19 @@ install_thirdparty()
 
   mkdir -p $THIRDPARTYFOLDER
 
-  # get Seafile thirdparty requirements directly from GitHub
-  echo -e "\n\e[93m   Get Seafile thirdparty requirements directly from GitHub\e[39m\n"
+  # get Seahub thirdparty requirements directly from GitHub
+  echo -e "\n\e[93m   Get Seahub thirdparty requirements directly from GitHub\e[39m\n"
   (set -x; wget $PYTHON_REQUIREMENTS_URL_SEAHUB -O $THIRDPARTYFOLDER/requirements.txt)
 
-  # install Seahub thirdparty requirements
+  # get SeafDAV thirdparty requirements directly from Github
+  echo -e "\n\e[93m   Get SeafDAV thirdparty requirements directly from GitHub\e[39m\n"
+  (set -x; wget $PYTHON_REQUIREMENTS_URL_SEAFDAV -O $THIRDPARTYFOLDER/requirements_SeafDAV.txt)
+  # merge seahub and seafdav requirements in one file
+  (set -x; cat $THIRDPARTYFOLDER/requirements_SeafDAV.txt >> $THIRDPARTYFOLDER/requirements.txt)
+
+  # install Seahub and SeafDAV thirdparty requirements
   # on pip=20.* DEPRECATION: --install-option: ['--install-lib', '--install-scripts']
-  echo -e "\n\e[93m   Install Seahub thirdparty requirements\e[39m\n"
+  echo -e "\n\e[93m   Install Seahub and SeafDAV thirdparty requirements\e[39m\n"
   (set -x; python3 -m pip install -r $THIRDPARTYFOLDER/requirements.txt --target $THIRDPARTYFOLDER --no-cache --upgrade)
 }
 
