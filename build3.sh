@@ -207,10 +207,11 @@ install_thirdparty()
   echo -e "\n\e[93m   Get and install pip(3) from linux distro\e[39m\n"
   (set -x; sudo apt-get install -y python3-pip)
 
-  # default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
+  # While pip alone is sufficient to install from pre-built binary archives, up to date copies of the setuptools and wheel projects are useful to ensure we can also install from source archives
+  # e.g. default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
   # script executed like as seafile user, therefore pip upgrade only for seafile user, not system wide; pip installation goes to /home/seafile/.local/lib/python3.6/site-packages
-  echo -e "\n\e[93m   Download and update pip(3) from PyPI\e[39m\n"
-  (set -x; python3 -m pip install --user --upgrade pip)
+  echo -e "\n\e[93m   Download and update pip(3), setuptools and wheel from PyPI\e[39m\n"
+  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel --no-warn-script-location)
 
   mkdir -p $THIRDPARTYFOLDER
 
