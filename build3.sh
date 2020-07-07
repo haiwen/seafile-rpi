@@ -199,13 +199,14 @@ install_thirdparty()
   echo
   echo -e "\n\e[93m-> [7/$STEPS] Install Seafile thirdparty requirements\e[39m\n"
 
-  # get and install Pillow dependencies
-  echo -e "\e[93m   Get and install Pillow dependencies\e[39m\n"
-  (set -x; sudo apt-get install -y libjpeg-dev zlib1g-dev libtiff5-dev libfreetype6-dev libwebp-dev)
-
   # get and install pip(3) from linux distro
   echo -e "\n\e[93m   Get and install pip(3) from linux distro\e[39m\n"
   (set -x; sudo apt-get install -y python3-pip)
+
+  # add piwheels to pip
+  echo -e "\e[93m   Add piwheels to pip\e[39m\n"
+  echo "[global]" > /etc/pip.conf
+  echo "extra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf
 
   # While pip alone is sufficient to install from pre-built binary archives, up to date copies of the setuptools and wheel projects are useful to ensure we can also install from source archives
   # e.g. default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
