@@ -229,6 +229,11 @@ install_thirdparty()
   # on pip=20.* DEPRECATION: --install-option: ['--install-lib', '--install-scripts']
   echo -e "\n\e[93m   Install Seahub and SeafDAV thirdparty requirements\e[39m\n"
   (set -x; python3 -m pip install -r $THIRDPARTYFOLDER/requirements.txt --target $THIRDPARTYFOLDER --no-cache --upgrade)
+
+  # clean up
+  echo -e "\n\e[93m   Clean up\e[39m\n"
+  rm $THIRDPARTYFOLDER/requirements.txt $THIRDPARTYFOLDER/requirements_SeafDAV.txt
+  rm -rf $(find . -name "__pycache__")
 }
 
 #
