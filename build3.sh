@@ -225,6 +225,9 @@ install_thirdparty()
   (set -x; wget $PYTHON_REQUIREMENTS_URL_SEAFDAV -O $THIRDPARTYFOLDER/requirements_SeafDAV.txt)
   # merge seahub and seafdav requirements in one file
   (set -x; cat $THIRDPARTYFOLDER/requirements_SeafDAV.txt >> $THIRDPARTYFOLDER/requirements.txt)
+  # temporary fix for seafdav
+  (set -x; echo "jinja2" >> $THIRDPARTYFOLDER/requirements.txt)
+  (set -x; echo "sqlalchemy" >> $THIRDPARTYFOLDER/requirements.txt)
 
   # install Seahub and SeafDAV thirdparty requirements
   # on pip=20.* DEPRECATION: --install-option: ['--install-lib', '--install-scripts']
