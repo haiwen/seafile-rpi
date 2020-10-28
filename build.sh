@@ -36,6 +36,7 @@ install_dependencies()
   apt-get update
   apt-get install -y build-essential
   apt-get install -y \
+    git \
     libevent-dev \
     libcurl4-openssl-dev \
     libglib2.0-dev \
