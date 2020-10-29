@@ -46,6 +46,7 @@ install_dependencies()
   echo -e "\n\e[93mInstall build dependencies\e[39m\n"
   (set -x; sudo apt-get install -y \
      cmake \
+     git \
      intltool \
      libarchive-dev \
      libcurl4-openssl-dev \
