@@ -64,9 +64,12 @@ install_dependencies()
      libxml2-dev \
      libxslt-dev \
      python3-lxml \
+     python3-pip \
      python3-setuptools \
+     python3-wheel \
      uuid-dev \
-     valac)
+     valac \
+     wget)
 }
 
 #
