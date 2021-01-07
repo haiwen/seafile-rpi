@@ -10,6 +10,9 @@ BUILDFOLDER=haiwen-build
 THIRDPARTYFOLDER=$SCRIPTPATH/$BUILDFOLDER/seahub_thirdparty
 PKGSOURCEDIR=built-seafile-sources
 PKGDIR=built-seafile-server-pkgs
+PREFIX=$HOME/opt/local
+# Temporary folder for seafile-server dependency builds for shared libraries (ld)
+# see https://github.com/haiwen/seafile-server/blob/193ec9381e8210f35fb9c416932b51c6166ebed6/scripts/build/build-server.py#L345
 
 #LIBSEARPC_VERSION=3.1.0
 LIBSEARPC_VERSION_LATEST=3.2-latest # check if new tag is available on https://github.com/haiwen/libsearpc/releases
@@ -23,7 +26,7 @@ MYSQL_CONFIG_PATH=/usr/bin/mysql_config # ensure compilation with mysql support
 PYTHON_REQUIREMENTS_URL_SEAHUB=https://raw.githubusercontent.com/haiwen/seahub/master/requirements.txt
 PYTHON_REQUIREMENTS_URL_SEAFDAV=https://raw.githubusercontent.com/haiwen/seafdav/master/requirements.txt
 
-STEPS=12
+STEPS=13
 STEPCOUNTER=0
 
 mkdir -p $BUILDFOLDER
@@ -64,6 +67,7 @@ install_dependencies()
      libfuse-dev \
      libglib2.0-dev \
      libjansson-dev \
+     libjpeg-dev \
      libldap2-dev \
      libmariadbclient-dev-compat \
      libonig-dev \
@@ -80,6 +84,23 @@ install_dependencies()
      uuid-dev \
      valac \
      wget)
+}
+
+#
+# PREPARE build (without privileges)
+#
+
+prepare_build()
+{
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Prepare build\e[39m\n"
+
+  set -x
+  mkdir -p $PREFIX
+  export LIBRARY_PATH=$PREFIX/lib
+  export LD_LIBRARY_PATH=$PREFIX/lib
+  export CPATH=$PREFIX/include
+  set +x
 }
 
 #
@@ -102,13 +123,10 @@ build_libevhtp()
     (set -x; git clone https://www.github.com/haiwen/libevhtp.git)
     cd libevhtp
   fi
-  (set -x; cmake -DEVHTP_DISABLE_SSL=ON -DEVHTP_BUILD_SHARED=OFF .)
+  (set -x; cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DEVHTP_DISABLE_SSL=ON -DEVHTP_BUILD_SHARED=OFF .)
   (set -x; make)
-  (set -x; sudo make install)
+  (set -x; make install)
   cd $SCRIPTPATH
-
-  # update system lib cache
-  sudo ldconfig
 }
 
 #
@@ -396,6 +414,7 @@ echo_complete()
 
 echo_start
 install_dependencies
+prepare_build
 build_libevhtp
 
 export_pkg_config_path
