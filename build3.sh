@@ -216,10 +216,6 @@ install_thirdparty()
   STEPCOUNTER=$((STEPCOUNTER+1))
   echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Install Seafile thirdparty requirements\e[39m\n"
 
-  # get and install pip(3) from linux distro
-  echo -e "\n\e[93m   Get and install pip(3) from linux distro\e[39m\n"
-  (set -x; sudo apt-get install -y python3-pip)
-
   # add piwheels to pip
   echo -e "\e[93m   Add piwheels to pip\e[39m\n"
   echo "[global]" > /etc/pip.conf
