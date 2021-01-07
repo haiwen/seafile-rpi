@@ -24,10 +24,18 @@ PYTHON_REQUIREMENTS_URL_SEAHUB=https://raw.githubusercontent.com/haiwen/seahub/m
 PYTHON_REQUIREMENTS_URL_SEAFDAV=https://raw.githubusercontent.com/haiwen/seafdav/master/requirements.txt
 
 STEPS=12
+STEPCOUNTER=0
 
 mkdir -p $BUILDFOLDER
 
-echo "Build seafile-rpi $VERSION_TAG."
+#
+# START
+#
+
+echo_start()
+{
+  echo -e "\e[93mBuild seafile-rpi $VERSION_TAG\e[39m\n"
+}
 
 #
 # INSTALL DEPENDENCIES
@@ -35,7 +43,8 @@ echo "Build seafile-rpi $VERSION_TAG."
 
 install_dependencies()
 {
-  echo -e "\n\e[93m-> [1/$STEPS] Install dependencies\e[39m"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Install dependencies\e[39m\n"
 
   # https://github.com/haiwen/seafile/issues/1158
   # onigposix (libonig-dev) is dependency for /usr/local/include/evhtp.h
@@ -79,7 +88,8 @@ install_dependencies()
 
 build_libevhtp()
 {
-  echo -e "\n\e[93m-> [2/$STEPS] Build libevhtp\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build libevhtp\e[39m\n"
 
   cd $BUILDFOLDER
 
@@ -107,7 +117,8 @@ build_libevhtp()
 
 export_pkg_config_path()
 {
-  echo -e "\n\e[93m-> [3/$STEPS] PREPARE libs\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] PREPARE libs\e[39m\n"
   # Export PKG_CONFIG_PATH for seafile-server, libsearpc and ccnet-server
   echo -e "\e[93m   Export PKG_CONFIG_PATH for seafile-server, libsearpc and ccnet-server\e[39m\n"
   export PKG_CONFIG_PATH=$SCRIPTPATH/$BUILDFOLDER/ccnet-server:$PKG_CONFIG_PATH
@@ -124,7 +135,8 @@ export_pkg_config_path()
 
 build_libsearpc()
 {
-  echo -e "\e[93m-> [4/$STEPS] Build libsearpc\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build libsearpc\e[39m\n"
 
   cd $BUILDFOLDER
   if [ -d "libsearpc" ]; then
@@ -149,8 +161,8 @@ build_libsearpc()
 
 build_ccnet()
 {
-  echo
-  echo -e "\n\e[93m-> [5/$STEPS] Build ccnet-server\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build ccnet-server\e[39m\n"
 
   cd $BUILDFOLDER
   if [ -d "ccnet-server" ]; then
@@ -175,8 +187,8 @@ build_ccnet()
 
 build_seafile()
 {
-  echo
-  echo -e "\n\e[93m-> [6/$STEPS] Build seafile-server\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build seafile-server\e[39m\n"
 
   cd $BUILDFOLDER
   if [ -d "seafile-server" ]; then
@@ -201,8 +213,8 @@ build_seafile()
 
 install_thirdparty()
 {
-  echo
-  echo -e "\n\e[93m-> [7/$STEPS] Install Seafile thirdparty requirements\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Install Seafile thirdparty requirements\e[39m\n"
 
   # get and install pip(3) from linux distro
   echo -e "\n\e[93m   Get and install pip(3) from linux distro\e[39m\n"
@@ -248,7 +260,8 @@ install_thirdparty()
 
 build_seahub()
 {
-  echo -e "\n\e[93m-> [8/$STEPS] Build seahub\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build seahub\e[39m\n"
 
   # get source code
   cd $BUILDFOLDER
@@ -292,7 +305,8 @@ build_seahub()
 
 build_seafobj()
 {
-  echo -e "\n\e[93m-> [9/$STEPS] Build seafobj\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build seafobj\e[39m\n"
 
   cd $BUILDFOLDER
   if [ -d "seafobj" ]; then
@@ -314,7 +328,8 @@ build_seafobj()
 
 build_seafdav()
 {
-  echo -e "\n\e[93m-> [10/$STEPS] Build seafdav\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build seafdav\e[39m\n"
 
   cd $BUILDFOLDER
   if [ -d "seafdav" ]; then
@@ -336,7 +351,8 @@ build_seafdav()
 
 copy_pkg_source()
 {
-  echo -e "\n\e[93m-> [11/$STEPS] Copy sources to $PKGSOURCEDIR/R$VERSION \e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Copy sources to $PKGSOURCEDIR/R$VERSION \e[39m\n"
 
   mkdir -p $PKGSOURCEDIR/R$VERSION
   (set -x; cp $BUILDFOLDER/libsearpc/libsearpc-$LIBSEARPC_VERSION_FIXED.tar.gz $PKGSOURCEDIR/R$VERSION)
@@ -353,7 +369,8 @@ copy_pkg_source()
 
 build_server()
 {
-  echo -e "\n\e[93m-> [12/$STEPS] Build Seafile server\e[39m\n"
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  echo -e "\n\e[93m-> [$STEPCOUNTER/$STEPS] Build Seafile server\e[39m\n"
 
   mkdir -p $PKGDIR
   (set -x; python3 $SCRIPTPATH/$BUILDFOLDER/seafile-server/scripts/build/build-server.py \
@@ -374,13 +391,14 @@ build_server()
 
 echo_complete()
 {
-  echo -e "\n\e[93m-> BUILD SUCCESSFULLY COMPLETED.\e[39m\n"
+  echo -e "\n\e[93m-> BUILD COMPLETED.\e[39m\n"
 }
 
 #
 # MAIN
 #
 
+echo_start
 install_dependencies
 build_libevhtp
 
