@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: ./build3.sh 8.0.0
+# Usage: ./build3.sh 8.0.2
 
 #
 # CONST
@@ -15,7 +15,7 @@ PKGDIR=built-seafile-server-pkgs
 LIBSEARPC_VERSION_LATEST=3.2-latest # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED=3.1.0 # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
 LIBSEARPC_TAG=v$LIBSEARPC_VERSION_LATEST
-VERSION=${1:-'8.0.0'} # easily pass the Seafile server version to the build3.sh script; e.g. ./build3.sh 8.0.0
+VERSION=${1:-'8.0.2'} # easily pass the Seafile server version to the build3.sh script
 VERSION_TAG=v$VERSION-server
 VERSION_CCNET=6.0.1 # ccnet has not consistent version (see configure.ac)
 VERSION_SEAFILE=6.0.1 # ebenda for seafile
