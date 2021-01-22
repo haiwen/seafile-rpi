@@ -331,7 +331,7 @@ build_seafobj()
     (set -x; git clone https://github.com/haiwen/seafobj.git)
     cd seafobj
   fi
-  (set -x; git reset --hard $VERSTION_TAG)
+  (set -x; git reset --hard $VERSION_TAG)
   (set -x; make dist)
   cd $SCRIPTPATH
 }
