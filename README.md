@@ -43,7 +43,8 @@ $ sudo ./build.sh
 
 ## Manual and Guides
 
-- [Seafile Offical Document](http://manual.seafile.com/deploy/using_sqlite.html)
+- [Build Seafile server](https://manual.seafile.com/build_seafile/rpi/)
+- [Deploy Seafile server](https://manual.seafile.com/deploy/)
 
 ## Reporting Issues / GitHub Issues
 
