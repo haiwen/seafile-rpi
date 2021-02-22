@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: ./build3.sh 8.0.2
+# Usage: ./build3.sh 8.0.3
 
 #
 # CONST
@@ -18,7 +18,7 @@ PREFIX=$HOME/opt/local
 LIBSEARPC_VERSION_LATEST=3.2-latest # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED=3.1.0 # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
 LIBSEARPC_TAG=v$LIBSEARPC_VERSION_LATEST
-VERSION=${1:-'8.0.2'} # easily pass the Seafile server version to the build3.sh script
+VERSION=${1:-'8.0.3'} # easily pass the Seafile server version to the build3.sh script
 VERSION_TAG=v$VERSION-server
 VERSION_CCNET=6.0.1 # ccnet has not consistent version (see configure.ac)
 VERSION_SEAFILE=6.0.1 # ebenda for seafile
@@ -118,8 +118,8 @@ build_libevhtp()
   if [ -d "libevhtp" ]; then
     cd libevhtp
     (set -x; make clean)
+    (set -x; git fetch origin --tags)
     (set -x; git reset --hard origin/master)
-    (set -x; git pull)
   else
     (set -x; git clone https://www.github.com/haiwen/libevhtp.git)
     cd libevhtp
@@ -161,8 +161,8 @@ build_libsearpc()
   if [ -d "libsearpc" ]; then
     cd libsearpc
     (set -x; make clean && make distclean)
+    (set -x; git fetch origin --tags)
     (set -x; git reset --hard origin/master)
-    (set -x; git pull)
   else
     (set -x; git clone https://github.com/haiwen/libsearpc.git)
     cd libsearpc
@@ -187,8 +187,8 @@ build_ccnet()
   if [ -d "ccnet-server" ]; then
     cd ccnet-server
     (set -x; make clean && make distclean)
+    (set -x; git fetch origin --tags)
     (set -x; git reset --hard origin/master)
-    (set -x; git pull)
   else
     (set -x; git clone https://github.com/haiwen/ccnet-server.git)
     cd ccnet-server
@@ -213,8 +213,8 @@ build_seafile()
   if [ -d "seafile-server" ]; then
     cd seafile-server
     (set -x; make clean && make distclean)
+    (set -x; git fetch origin --tags)
     (set -x; git reset --hard origin/master)
-    (set -x; git pull)
   else
     (set -x; git clone https://github.com/haiwen/seafile-server.git)
     cd seafile-server
@@ -283,8 +283,8 @@ build_seahub()
   if [ -d "seahub" ]; then
     cd seahub
     (set -x; make clean)
+    (set -x; git fetch origin --tags)
     (set -x; git reset --hard origin/master)
-    (set -x; git pull)
   else
     (set -x; git clone https://github.com/haiwen/seahub.git)
     cd seahub
@@ -326,8 +326,8 @@ build_seafobj()
   cd $BUILDFOLDER
   if [ -d "seafobj" ]; then
     cd seafobj
+    (set -x; git fetch origin --tags)
     (set -x; git reset --hard origin/master)
-    (set -x; git pull)
   else
     (set -x; git clone https://github.com/haiwen/seafobj.git)
     cd seafobj
@@ -349,8 +349,8 @@ build_seafdav()
   cd $BUILDFOLDER
   if [ -d "seafdav" ]; then
     cd seafdav
+    (set -x; git fetch origin --tags)
     (set -x; git reset --hard origin/master)
-    (set -x; git pull)
   else
     (set -x; git clone https://github.com/haiwen/seafdav.git)
     cd seafdav
