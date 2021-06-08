@@ -7,13 +7,15 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 ## Build
 For Seafile versions which use Python 3. Seafile versions higher than 7.0.
 
-E.g. to compile Seafile server v8.0.3:
+E.g. to compile Seafile server v8.0.5:
 ```
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build3.sh
 $ chmod u+x build3.sh
-$ ./build3.sh 8.0.3
+$ ./build3.sh -v 8.0.5
 ```
-Schema of created directory structure
+Calling `./build3.sh` without arguments will return usage information and a list of all available arguments.
+
+Schema of created directory structure:
 ```
 seafile@rpi-bionic:~$ ll
 -rwxr--r-- 1 seafile seafile 7391 May 20 21:44 build3.sh
