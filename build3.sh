@@ -105,14 +105,10 @@ Usage:
 
     ${TXT_BOLD}-v${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set seafile server version to build
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${VERSION}${OFF}
-    ${TXT_BOLD}-r${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set libsearpc
+    ${TXT_BOLD}-r${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set libsearpc version
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${LIBSEARPC_VERSION_LATEST}${OFF}
-    ${TXT_BOLD}-f${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set fixed libsearpc
+    ${TXT_BOLD}-f${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set fixed libsearpc version
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${LIBSEARPC_VERSION_FIXED}${OFF}
-    ${TXT_BOLD}-c${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set ccnet
-                ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${VERSION_CCNET}${OFF}
-    ${TXT_BOLD}-s${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set seafile
-                ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${VERSION_SEAFILE}${OFF}
     ${TXT_BOLD}-h${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set python requirement file for seahub
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${PYTHON_REQUIREMENTS_URL_SEAHUB}${OFF}
     ${TXT_BOLD}-d${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set python requirement file for seafdav
@@ -124,7 +120,7 @@ Usage:
 fi
 
 # get the options
-while getopts ":12345678Adv:r:f:c:s:h:d:" OPT; do
+while getopts ":12345678Adv:r:f:h:d:" OPT; do
     case $OPT in
         d) CONF_INSTALL_DEPENDENCIES=true >&2
            STEPS=$((STEPS+2)) >&2
@@ -185,10 +181,6 @@ while getopts ":12345678Adv:r:f:c:s:h:d:" OPT; do
         r) LIBSEARPC_VERSION_LATEST=$OPTARG >&2
            ;;
         f) LIBSEARPC_VERSION_FIXED=$OPTARG >&2
-           ;;
-        c) VERSION_CCNET=$OPTARG >&2
-           ;;
-        s) VERSION_SEAFILE=$OPTARG >&2
            ;;
         h) PYTHON_REQUIREMENTS_URL_SEAHUB=$OPTARG >&2
            ;;
