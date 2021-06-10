@@ -365,12 +365,11 @@ build_ccnet()
     cd ccnet-server
     (set -x; make clean && make distclean)
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
   else
     (set -x; git clone "https://github.com/haiwen/ccnet-server.git")
     cd ccnet-server
   fi
-  (set -x; git reset --hard "${VERSION_TAG}")
+  (set -x; git reset --hard origin/master)
   (set -x; ./autogen.sh)
   (set -x; ./configure --with-mysql=${MYSQL_CONFIG_PATH})
   (set -x; make dist)
