@@ -269,12 +269,16 @@ prepare_build()
   STEPCOUNTER=$((STEPCOUNTER+1))
   msg "-> [${STEPCOUNTER}/${STEPS}] Prepare build"
 
-  set -x
   mkmissingdir "${PREFIX}"
+  msg "   Export LIBRARY_PATH, LD_LIBRARY_PATH, CPATH"
   export LIBRARY_PATH="${PREFIX}/lib"
   export LD_LIBRARY_PATH="${PREFIX}/lib"
   export CPATH="${PREFIX}/include"
-  set +x
+
+  # print ${LIBRARY_PATH}, ${LD_LIBRARY_PATH} and ${CPATH}
+  msg "   LIBRARY_PATH = ${LIBRARY_PATH} "
+  msg "   LD_LIBRARY_PATH = ${LD_LIBRARY_PATH} "
+  msg "   CPATH = ${CPATH} "
 }
 
 #
