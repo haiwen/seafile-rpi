@@ -17,23 +17,30 @@ Calling `./build3.sh` without arguments will return usage information and a list
 
 Schema of created directory structure:
 ```
-seafile@rpi-bionic:~$ ll
--rwxr--r-- 1 seafile seafile 7391 May 20 21:44 build3.sh
-drwxr-xr-x 1 seafile seafile   60 May 20 21:18 built-seafile-server-pkgs
-drwxr-xr-x 1 seafile seafile  214 May 20 21:14 built-seafile-sources
-drwxr-xr-x 1 seafile seafile  160 May 20 21:14 haiwen-build
+seafile@rpi-focal:~$ ll
+total 20
+-rwxrwxr-x 1 seafile seafile 17795 Jun 10 00:42 build3.sh
+drwxrwxr-x 1 seafile seafile    60 Jun 10 00:21 built-seafile-server-pkgs
+drwxrwxr-x 1 seafile seafile    12 Jun  9 23:41 built-seafile-sources
+drwxrwxr-x 1 seafile seafile   160 Jun 10 00:16 haiwen-build
+drwxrwxr-x 1 seafile seafile    10 Jun  9 22:36 opt
 .
+├── build3.sh
 ├── built-seafile-server-pkgs
+│   └── seafile-server_8.0.5_pi.tar.gz
 ├── built-seafile-sources
-└── haiwen-build
-    ├── ccnet-server
-    ├── libevhtp
-    ├── libsearpc
-    ├── seafdav
-    ├── seafile-server
-    ├── seafobj
-    ├── seahub
-    └── seahub_thirdparty
+│   └── R8.0.5
+├── haiwen-build
+│   ├── ccnet-server
+│   ├── libevhtp
+│   ├── libsearpc
+│   ├── seafdav
+│   ├── seafile-server
+│   ├── seafobj
+│   ├── seahub
+│   └── seahub_thirdparty
+└── opt
+    └── local
 ```
 
 For Seafile versions which use Python 2. Seafile versions lower than 7.1, e.g. v7.0.5:
