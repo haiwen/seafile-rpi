@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && { 
-    echo "2021-06-08";
+    echo "2021-06-17";
     exit 0
 };
 
@@ -21,11 +21,9 @@ PREFIX="${HOME}/opt/local"
 LIBSEARPC_VERSION_LATEST="3.2-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
 VERSION="8.0.5"
-VERSION_CCNET="6.0.1" # ccnet has not consistent version (see configure.ac)
-VERSION_SEAFILE="6.0.1" # ebenda for seafile
+VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)
 MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql support
-#PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/master/requirements.txt"  # official requirements.txt file
-PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/jobenvil/rpi-build-seafile/main/seahub_requirements_v8.0.5.txt" # Only for build the 8.0.5 version
+PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/master/requirements.txt"  # official requirements.txt file
 PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/master/requirements.txt"
 
 STEPS=0
@@ -34,7 +32,6 @@ STEPCOUNTER=0
 CONF_INSTALL_DEPENDENCIES=false
 CONF_BUILD_LIBEVHTP=false
 CONF_BUILD_LIBSEARPC=false
-CONF_BUILD_CCNET=false
 CONF_BUILD_SEAFILE=false
 CONF_BUILD_SEAHUB=false
 CONF_BUILD_SEAFOBJ=false
@@ -94,14 +91,13 @@ Usage:
 
     ${TXT_BOLD}-1${OFF}          Build/update libevhtp
     ${TXT_BOLD}-2${OFF}          Build/update libsearpc
-    ${TXT_BOLD}-3${OFF}          Build/update ccnet
     ${TXT_BOLD}-4${OFF}          Build/update seafile
     ${TXT_BOLD}-5${OFF}          Build/update seahub
     ${TXT_BOLD}-6${OFF}          Build/update seafobj
     ${TXT_BOLD}-7${OFF}          Build/update seafdav
     ${TXT_BOLD}-8${OFF}          Build/update Seafile server
 
-    ${TXT_BOLD}-A${OFF}          All options ${TXT_BOLD}-1${OFF} to ${TXT_BOLD}-8${OFF} in one go
+    ${TXT_BOLD}-A${OFF}          All options ${TXT_BOLD}-1${OFF} to ${TXT_BOLD}-7${OFF} in one go
 
     ${TXT_BOLD}-v${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set seafile server version to build
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${VERSION}${OFF}
@@ -120,9 +116,9 @@ Usage:
 fi
 
 # get the options
-while getopts ":12345678Adv:r:f:h:d:" OPT; do
+while getopts ":1234567ADv:r:f:h:d:" OPT; do
     case $OPT in
-        d) CONF_INSTALL_DEPENDENCIES=true >&2
+        D) CONF_INSTALL_DEPENDENCIES=true >&2
            STEPS=$((STEPS+2)) >&2
            ;;
         1) CONF_BUILD_LIBEVHTP=true >&2
@@ -134,39 +130,33 @@ while getopts ":12345678Adv:r:f:h:d:" OPT; do
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        3) CONF_BUILD_CCNET=true >&2
+        3) CONF_BUILD_SEAFILE=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        4) CONF_BUILD_SEAFILE=true >&2
+        4) CONF_BUILD_SEAHUB=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        5) CONF_BUILD_SEAHUB=true >&2
+        5) CONF_BUILD_SEAFOBJ=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        6) CONF_BUILD_SEAFOBJ=true >&2
+        6) CONF_BUILD_SEAFDAV=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        7) CONF_BUILD_SEAFDAV=true >&2
-           PREP_BUILD=true >&2
-           COPY_PKG_SOURCE=true >&2
-           STEPS=$((STEPS+1)) >&2
-           ;;
-        8) CONF_BUILD_SEAFILE_SERVER=true >&2
+        7) CONF_BUILD_SEAFILE_SERVER=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
         A) CONF_BUILD_LIBEVHTP=true >&2
            CONF_BUILD_LIBSEARPC=true >&2
-           CONF_BUILD_CCNET=true >&2
            CONF_BUILD_SEAFILE=true >&2
            CONF_BUILD_SEAHUB=true >&2
            CONF_BUILD_SEAFOBJ=true >&2
@@ -258,6 +248,7 @@ install_dependencies()
      uuid-dev \
      valac \
      wget)
+  (set -x; sudo python3 -m pip install --upgrade pip)
 }
 
 #
@@ -315,9 +306,8 @@ export_pkg_config_path()
 {
   STEPCOUNTER=$((STEPCOUNTER+1))
   msg "-> [${STEPCOUNTER}/${STEPS}] PREPARE libs"
-  # Export PKG_CONFIG_PATH for seafile-server, libsearpc and ccnet-server
-  msg "   Export PKG_CONFIG_PATH for seafile-server, libsearpc and ccnet-server"
-  export PKG_CONFIG_PATH="${BUILDPATH}/ccnet-server:${PKG_CONFIG_PATH}"
+  # Export PKG_CONFIG_PATH for seafile-server and libsearpc
+  msg "   Export PKG_CONFIG_PATH for seafile-server and libsearpc"
   export PKG_CONFIG_PATH="${BUILDPATH}/libsearpc:${PKG_CONFIG_PATH}"
   export PKG_CONFIG_PATH="${BUILDPATH}/seafile-server/lib:${PKG_CONFIG_PATH}"
 
@@ -347,31 +337,6 @@ build_libsearpc()
   (set -x; git reset --hard "${LIBSEARPC_TAG}")
   (set -x; ./autogen.sh)
   (set -x; ./configure)
-  (set -x; make dist)
-  cd "${SCRIPTPATH}"
-}
-
-#
-# BUILD ccnet
-#
-
-build_ccnet()
-{
-  STEPCOUNTER=$((STEPCOUNTER+1))
-  msg "-> [${STEPCOUNTER}/${STEPS}] Build ccnet-server"
-
-  cd "${BUILDPATH}"
-  if [ -d "ccnet-server" ]; then
-    cd ccnet-server
-    (set -x; make clean && make distclean)
-    (set -x; git fetch origin --tags)
-  else
-    (set -x; git clone "https://github.com/haiwen/ccnet-server.git")
-    cd ccnet-server
-  fi
-  (set -x; git reset --hard origin/master)
-  (set -x; ./autogen.sh)
-  (set -x; ./configure --with-mysql=${MYSQL_CONFIG_PATH})
   (set -x; make dist)
   cd "${SCRIPTPATH}"
 }
@@ -548,7 +513,6 @@ copy_pkg_source()
   mkmissingdir "${SCRIPTPATH}/${PKGSOURCEDIR}/R${VERSION}"
   for i in \
       "${BUILDPATH}/libsearpc/libsearpc-${LIBSEARPC_VERSION_FIXED}.tar.gz" \
-      "${BUILDPATH}/ccnet-server/ccnet-${VERSION_CCNET}.tar.gz" \
       "${BUILDPATH}/seafile-server/seafile-${VERSION_SEAFILE}.tar.gz" \
       "${BUILDPATH}/seahub/seahub-${VERSION_SEAFILE}.tar.gz" \
       "${BUILDPATH}/seafobj/seafobj.tar.gz" \
@@ -571,7 +535,6 @@ build_server()
   mkmissingdir "${SCRIPTPATH}/${PKGDIR}"
   (set -x; python3 "${BUILDPATH}/seafile-server/scripts/build/build-server.py" \
     --libsearpc_version="${LIBSEARPC_VERSION_FIXED}" \
-    --ccnet_version="${VERSION_CCNET}" \
     --seafile_version="${VERSION_SEAFILE}" \
     --version="${VERSION}" \
     --thirdpartdir="${THIRDPARTYFOLDER}" \
@@ -609,7 +572,6 @@ fi
 
 ${CONF_BUILD_LIBEVHTP} && build_libevhtp
 ${CONF_BUILD_LIBSEARPC} && build_libsearpc
-${CONF_BUILD_CCNET} && build_ccnet
 ${CONF_BUILD_SEAFILE} && build_seafile
 ${CONF_BUILD_SEAHUB} && build_seahub
 ${CONF_BUILD_SEAFOBJ} && build_seafobj
