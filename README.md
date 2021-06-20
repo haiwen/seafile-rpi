@@ -62,4 +62,4 @@ If you have any problems or suggestions when using the seafile rpi server packag
 
 ## Contributors
 
-See [CONTRIBUTORS](CONTRIBUTORS).
+See [CONTRIBUTORS](https://github.com/haiwen/seafile-rpi/graphs/contributors).
