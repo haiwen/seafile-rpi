@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && { 
-    echo "2021-06-17";
+    echo "2021-06-21";
     exit 0
 };
 
@@ -23,8 +23,11 @@ LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/h
 VERSION="8.0.5"
 VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)
 MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql support
-PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/master/requirements.txt"  # official requirements.txt file
-PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/master/requirements.txt"
+
+VERSION_TAG="v${VERSION}-server"
+LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}"
+PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt"  # official requirements.txt file
+PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt"
 
 STEPS=0
 STEPCOUNTER=0
@@ -87,15 +90,15 @@ Usage:
   ${TXT_BOLD}build3.sh${OFF} ${TXT_DGRAY}${TXT_ITALIC}[OPTIONS]${OFF}
 
   ${TXT_UNDERSCORE}OPTIONS${OFF}:
-    ${TXT_BOLD}-d${OFF}          Install dependencies and thirdparty requirements
+    ${TXT_BOLD}-D${OFF}          Install dependencies and thirdparty requirements
 
     ${TXT_BOLD}-1${OFF}          Build/update libevhtp
     ${TXT_BOLD}-2${OFF}          Build/update libsearpc
-    ${TXT_BOLD}-4${OFF}          Build/update seafile
-    ${TXT_BOLD}-5${OFF}          Build/update seahub
-    ${TXT_BOLD}-6${OFF}          Build/update seafobj
-    ${TXT_BOLD}-7${OFF}          Build/update seafdav
-    ${TXT_BOLD}-8${OFF}          Build/update Seafile server
+    ${TXT_BOLD}-3${OFF}          Build/update seafile
+    ${TXT_BOLD}-4${OFF}          Build/update seahub
+    ${TXT_BOLD}-5${OFF}          Build/update seafobj
+    ${TXT_BOLD}-6${OFF}          Build/update seafdav
+    ${TXT_BOLD}-7${OFF}          Build/update Seafile server
 
     ${TXT_BOLD}-A${OFF}          All options ${TXT_BOLD}-1${OFF} to ${TXT_BOLD}-7${OFF} in one go
 
@@ -167,8 +170,12 @@ while getopts ":1234567ADv:r:f:h:d:" OPT; do
            STEPS=$((STEPS+8)) >&2
            ;;
         v) VERSION=$OPTARG >&2
+           VERSION_TAG="v${VERSION}-server" >&2
+           PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt" >&2
+           PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt" >&2
            ;;
         r) LIBSEARPC_VERSION_LATEST=$OPTARG >&2
+           LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}" >&2
            ;;
         f) LIBSEARPC_VERSION_FIXED=$OPTARG >&2
            ;;
@@ -185,8 +192,6 @@ while getopts ":1234567ADv:r:f:h:d:" OPT; do
     esac
 done
 
-LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}"
-VERSION_TAG="v${VERSION}-server"
 
 # set counter accordingly
 ${PREP_BUILD} && STEPS=$((STEPS+2))
