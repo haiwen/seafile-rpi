@@ -30,7 +30,6 @@ PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/
 PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt"
 BUILD_SERVER_PATCH="https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-server.py.patch"
 
-
 STEPS=0
 STEPCOUNTER=0
 
@@ -242,7 +241,7 @@ install_dependencies()
      libmariadbclient-dev-compat \
      libonig-dev \
      libpq-dev \
-     libsqlite3-dev
+     libsqlite3-dev \
      libssl-dev \
      libtool \
      libxml2-dev \
