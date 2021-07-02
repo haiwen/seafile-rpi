@@ -255,7 +255,6 @@ install_dependencies()
      uuid-dev \
      valac \
      wget)
-  (set -x; sudo python3 -m pip install --upgrade pip)
 }
 
 #
