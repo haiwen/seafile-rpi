@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && { 
-    echo "2021-06-21";
+    echo "2021-07-02";
     exit 0
 };
 
@@ -28,6 +28,8 @@ VERSION_TAG="v${VERSION}-server"
 LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}"
 PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt"  # official requirements.txt file
 PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt"
+BUILD_SERVER_PATCH="https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-server.py.patch"
+
 
 STEPS=0
 STEPCOUNTER=0
@@ -240,11 +242,12 @@ install_dependencies()
      libmariadbclient-dev-compat \
      libonig-dev \
      libpq-dev \
-     libsqlite3-dev \
+     libsqlite3-dev
      libssl-dev \
      libtool \
      libxml2-dev \
      libxslt-dev \
+     python3-distro \
      python3-lxml \
      python3-ldap \
      python3-pip \
@@ -538,6 +541,13 @@ build_server()
 
   cd "${BUILDPATH}"
   mkmissingdir "${SCRIPTPATH}/${PKGDIR}"
+    if [ ! -f "${SCRIPTPATH}/build-server.py.patch" ] ; then
+    msg "-> ${SCRIPTPATH}/build-server.py.patch not found!. Downloading patch file from GitHub..."
+    (set -x; wget "${BUILD_SERVER_PATCH}" -O "${SCRIPTPATH}/build-server.py.patch")
+  fi
+  msg "-> Patch file found under ${SCRIPTPATH}. Applying build-server.py.patch..."
+  (set -x; patch -N -b "${BUILDPATH}/seafile-server/scripts/build/build-server.py" "${SCRIPTPATH}/build-server.py.patch")
+  msg "-> Executing build-server.py"
   (set -x; python3 "${BUILDPATH}/seafile-server/scripts/build/build-server.py" \
     --libsearpc_version="${LIBSEARPC_VERSION_FIXED}" \
     --seafile_version="${VERSION_SEAFILE}" \
