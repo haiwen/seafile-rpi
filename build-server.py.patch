@@ -28,7 +28,8 @@
 @@ -807,16 +812,19 @@
      version = conf[CONF_VERSION]
      arch = os.uname()[-1].replace('_', '-')
-     if 'arm' in platform.machine():
+-    if 'arm' in platform.machine():
++    if 'arm' in platform.machine() or 'aarch64' in platform.machine():
 -        arch = 'pi'
 +        arch = platform.machine()
      elif arch != 'x86-64':
