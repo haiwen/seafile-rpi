@@ -391,7 +391,7 @@ install_thirdparty()
   # e.g. default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
   # script executed like as seafile user, therefore pip upgrade only for seafile user, not system wide; pip installation goes to /home/seafile/.local/lib/python3.6/site-packages
   msg "   Download and update pip(3), setuptools and wheel from PyPI"
-  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel --no-warn-script-location)
+  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel distro --no-warn-script-location)
 
   mkmissingdir "${THIRDPARTYFOLDER}"
 
