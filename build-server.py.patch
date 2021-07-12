@@ -36,7 +36,7 @@
          arch = 'i386'
 
 +    # determine linux distribution
-+    distribution = distro.linux_distribution()[-1]
++    distribution = distro.linux_distribution()[-1].replace(' ', '-')
 +
      dbg = ''
      if conf[CONF_NO_STRIP]:
