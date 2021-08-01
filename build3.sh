@@ -85,6 +85,13 @@ mkmissingdir()
     fi
 }
 
+exitonfailure()
+{
+  if [ $? -ne 0 ]; then
+    error "$1"
+  fi
+}
+
 if [[ $1 == "" ]] ; then
   echo -e "
 Usage:
@@ -301,6 +308,7 @@ build_libevhtp()
   (set -x; cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DEVHTP_DISABLE_SSL=ON -DEVHTP_BUILD_SHARED=OFF .)
   (set -x; make)
   (set -x; make install)
+  exitonfailure "Build libevhtp failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -344,6 +352,7 @@ build_libsearpc()
   (set -x; ./autogen.sh)
   (set -x; ./configure)
   (set -x; make dist)
+  exitonfailure "Build libsearpc failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -370,6 +379,7 @@ build_seafile()
   (set -x; ./autogen.sh)
   (set -x; ./configure --with-mysql=${MYSQL_CONFIG_PATH} --enable-ldap)
   (set -x; make dist)
+  exitonfailure "Build seafile-server failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -398,10 +408,12 @@ install_thirdparty()
   # get Seahub thirdparty requirements directly from GitHub
   msg "   Get Seahub thirdparty requirements directly from GitHub"
   (set -x; wget "$PYTHON_REQUIREMENTS_URL_SEAHUB" -O "${THIRDPARTYFOLDER}/requirements.txt")
+  exitonfailure "Unable to get Seahub requirements"
 
   # get SeafDAV thirdparty requirements directly from Github
   msg "   Get SeafDAV thirdparty requirements directly from GitHub"
   (set -x; wget "$PYTHON_REQUIREMENTS_URL_SEAFDAV" -O "${THIRDPARTYFOLDER}/requirements_SeafDAV.txt")
+  exitonfailure "Unable to get Seafdav requirements"
   # merge seahub and seafdav requirements in one file
   (set -x; cat "${THIRDPARTYFOLDER}/requirements_SeafDAV.txt" >> "${THIRDPARTYFOLDER}/requirements.txt")
 
@@ -409,6 +421,7 @@ install_thirdparty()
   # on pip=20.* DEPRECATION: --install-option: ['--install-lib', '--install-scripts']
   msg "   Install Seahub and SeafDAV thirdparty requirements"
   (set -x; python3 -m pip install -r "${THIRDPARTYFOLDER}/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
+  exitonfailure "Thirdparty requirements installation failed"
 
   # clean up
   msg "   Clean up"
@@ -458,6 +471,7 @@ build_seahub()
   # generate package
   # if python != python3.6 we need to "sudo ln -s /usr/bin/python3.6 /usr/bin/python" or with "pyenv global 3.6.9"
   (set -x; python3 "${BUILDPATH}/seahub/tools/gen-tarball.py" --version="${VERSION_SEAFILE}" --branch=HEAD)
+  exitonfailure "Build seafile-server failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -481,6 +495,7 @@ build_seafobj()
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; make dist)
+  exitonfailure "Build seafobj failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -504,6 +519,7 @@ build_seafdav()
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; make)
+  exitonfailure "Build seafdav failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -555,6 +571,7 @@ build_server()
     --mysql_config="${MYSQL_CONFIG_PATH}" \
     --outputdir="${SCRIPTPATH}/${PKGDIR}" \
     --yes)
+  exitonfailure "Build Seafile server failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -583,7 +600,7 @@ if ${PREP_BUILD} ; then
     export_pkg_config_path
 fi
 
-${CONF_BUILD_LIBEVHTP} && build_libevhtp
+${CONF_BUILD_LIBEVHTP} && build_libevhtp 
 ${CONF_BUILD_LIBSEARPC} && build_libsearpc
 ${CONF_BUILD_SEAFILE} && build_seafile
 ${CONF_BUILD_SEAHUB} && build_seahub
