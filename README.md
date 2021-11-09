@@ -7,11 +7,11 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 ## Build
 For Seafile versions which use Python 3. Seafile versions higher than 7.0.
 
-E.g. to compile Seafile server v8.0.5:
+E.g. to compile Seafile server v9.0.0:
 ```
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build3.sh
 $ chmod u+x build3.sh
-$ ./build3.sh -D -A -v 8.0.5
+$ ./build3.sh -D -A -v 9.0.0
 ```
 Calling `./build3.sh` without arguments will return usage information and a list of all available arguments.
 
@@ -27,9 +27,9 @@ drwxrwxr-x 1 seafile seafile    10 Jun  9 22:36 opt
 .
 ├── build3.sh
 ├── built-seafile-server-pkgs
-│   └── seafile-server_8.0.5_pi.tar.gz
+│   └── seafile-server_9.0.0_pi.tar.gz
 ├── built-seafile-sources
-│   └── R8.0.5
+│   └── R9.0.0
 ├── haiwen-build
 │   ├── libevhtp
 │   ├── libsearpc
