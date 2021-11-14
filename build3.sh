@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && { 
-    echo "2021-10-30";
+    echo "2021-11-14";
     exit 0
 };
 
@@ -234,6 +234,7 @@ install_dependencies()
   (set -x; sudo apt install -y build-essential)
   msg "Install build dependencies"
   (set -x; sudo apt install -y \
+     cargo \
      cmake \
      git \
      intltool \
