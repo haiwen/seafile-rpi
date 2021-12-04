@@ -5,31 +5,60 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 - The latest **stable** rpi version is [here](https://github.com/haiwen/seafile-rpi/releases/latest).
 
 ## Build
-For Seafile versions which use Python 3. Seafile versions higher than 7.0.
 
-E.g. to compile Seafile server v9.0.0:
+E.g. to compile Seafile server v9.0.1:
 ```
-$ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build3.sh
-$ chmod u+x build3.sh
-$ ./build3.sh -D -A -v 9.0.0
+$ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
+$ chmod u+x build.sh
+$ ./build.sh -D -A -v 9.0.1
 ```
-Calling `./build3.sh` without arguments will return usage information and a list of all available arguments.
+Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
+```
+seafile@rpi-focal:~$ ./build.sh
 
-Schema of created directory structure:
+Usage:
+  build.sh [OPTIONS]
+
+  OPTIONS:
+    -D          Install dependencies and thirdparty requirements
+
+    -1          Build/update libevhtp
+    -2          Build/update libsearpc
+    -3          Build/update seafile (c_fileserver)
+    -4          Build/update seafile (go_fileserver)
+    -5          Build/update seahub
+    -6          Build/update seafobj
+    -7          Build/update seafdav
+    -8          Build/update Seafile server
+
+    -A          All options -1 to -8 in one go
+
+    -v <vers>   Set seafile server version to build
+                default: 9.0.1
+    -r <vers>   Set libsearpc version
+                default: 3.2-latest
+    -f <vers>   Set fixed libsearpc version
+                default: 3.1.0
+    -h <vers>   Set python requirement file for seahub
+                default: https://raw.githubusercontent.com/haiwen/seahub/v9.0.1-server/requirements.txt
+    -d <vers>   Set python requirement file for seafdav
+                default: https://raw.githubusercontent.com/haiwen/seafdav/v9.0.1-server/requirements.txt
+
+    use --version for version info of this script.
 ```
-seafile@rpi-focal:~$ ll
-total 20
--rwxrwxr-x 1 seafile seafile 17795 Jun 10 00:42 build3.sh
-drwxrwxr-x 1 seafile seafile    60 Jun 10 00:21 built-seafile-server-pkgs
-drwxrwxr-x 1 seafile seafile    12 Jun  9 23:41 built-seafile-sources
-drwxrwxr-x 1 seafile seafile   160 Jun 10 00:16 haiwen-build
-drwxrwxr-x 1 seafile seafile    10 Jun  9 22:36 opt
+
+Schema of created directory structure after execution of `./build.sh`:
+```
+seafile@rpi-focal:~$ tree . -L 3
 .
-├── build3.sh
+├── build.sh
+├── build-server.py.patch
 ├── built-seafile-server-pkgs
-│   └── seafile-server_9.0.0_pi.tar.gz
+│   └── seafile-server-9.0.1-focal-armv7l.tar.gz
 ├── built-seafile-sources
-│   └── R9.0.0
+│   └── R9.0.1
+├── go
+│   └── pkg
 ├── haiwen-build
 │   ├── libevhtp
 │   ├── libsearpc
@@ -39,14 +68,7 @@ drwxrwxr-x 1 seafile seafile    10 Jun  9 22:36 opt
 │   ├── seahub
 │   └── seahub_thirdparty
 └── opt
-    └── local
-```
-
-For Seafile versions which use Python 2. Seafile versions lower than 7.1, e.g. v7.0.5:
-```
-$ git clone https://github.com/haiwen/seafile-rpi.git
-$ cd seafile-rpi
-$ sudo ./build.sh
+    └── local
 ```
 
 ## Manual and Guides
