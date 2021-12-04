@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && { 
-    echo "2021-11-14";
+    echo "2021-12-04";
     exit 0
 };
 
@@ -22,7 +22,7 @@ PREFIX="${HOME}/opt/local"
 
 LIBSEARPC_VERSION_LATEST="3.2-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
-VERSION="9.0.0"
+VERSION="9.0.1"
 VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)
 MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql support
 
