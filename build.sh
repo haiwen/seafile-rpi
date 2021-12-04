@@ -98,7 +98,7 @@ exitonfailure()
 if [[ $1 == "" ]] ; then
   echo -e "
 Usage:
-  ${TXT_BOLD}build3.sh${OFF} ${TXT_DGRAY}${TXT_ITALIC}[OPTIONS]${OFF}
+  ${TXT_BOLD}build.sh${OFF} ${TXT_DGRAY}${TXT_ITALIC}[OPTIONS]${OFF}
 
   ${TXT_UNDERSCORE}OPTIONS${OFF}:
     ${TXT_BOLD}-D${OFF}          Install dependencies and thirdparty requirements
