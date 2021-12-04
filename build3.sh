@@ -14,6 +14,8 @@ BUILDPATH="${SCRIPTPATH}/${BUILDFOLDER}"
 THIRDPARTYFOLDER="${BUILDPATH}/seahub_thirdparty"
 PKGSOURCEDIR="built-seafile-sources"
 PKGDIR="built-seafile-server-pkgs"
+DISTRO=`lsb_release -d | awk '{ print $2 }'`
+ARCH=$(arch)
 PREFIX="${HOME}/opt/local"
 # Temporary folder for seafile-server dependency builds for shared libraries (ld)
 # see https://github.com/haiwen/seafile-server/blob/193ec9381e8210f35fb9c416932b51c6166ebed6/scripts/build/build-server.py#L345
@@ -393,16 +395,34 @@ install_thirdparty()
   STEPCOUNTER=$((STEPCOUNTER+1))
   msg "-> [${STEPCOUNTER}/${STEPS}] Install Seafile thirdparty requirements"
 
-  # add piwheels to pip
-  msg "   Add piwheels to pip"
-  echo "[global]" > "${HOME}/.config/pip/pip.conf"
-  echo "extra-index-url=https://www.piwheels.org/simple" >> "${HOME}/.config/pip/pip.conf"
+  # if distro and arch matches, add piwheels to pip config file
+  msg "   Only add \"piwheels\" to pip config file if distro is DEBIAN (Buster or Bullseye) and the architecture is ARM."
+  if [ ${DISTRO} = Debian -o ${DISTRO} = Raspbian ] && [ ${ARCH} = armv7l -o ${ARCH} = armv8l -o ${ARCH} = aarch64 ]; then
+    msg "   Detected \"${DISTRO}\" distro for \"${ARCH}\". We can make use of \"piwheels\", pre-compiled binary Python packages."
+    if [ ! -f "${HOME}/.config/pip/pip.conf" ]; then
+      msg "   Adding \"piwheels\" to pip config file under '${HOME}/.config/pip/pip.conf'..."
+      mkdir -p "${HOME}/.config" "${HOME}/.config/pip" && touch "${HOME}/.config/pip/pip.conf"
+      echo "[global]" > "${HOME}/.config/pip/pip.conf"
+      echo "extra-index-url=https://www.piwheels.org/simple" >> "${HOME}/.config/pip/pip.conf"
+      msg "   Added 'extra-index-url=https://www.piwheels.org/simple' to pip config file."
+    else
+      msg "   The pip config file '${HOME}/.config/pip/pip.conf' is already present on the system."
+      if grep -Fxq "extra-index-url=https://www.piwheels.org/simple" ${HOME}/.config/pip/pip.conf; then
+        msg "   Found the line 'extra-index-url=https://www.piwheels.org/simple' already inside of the pip config file '${HOME}/.config/pip/pip.conf'."
+      else
+        msg "   Adding 'extra-index-url=https://www.piwheels.org/simple' to '${HOME}/.config/pip/pip.conf'"
+        echo "[global]" >> "${HOME}/.config/pip/pip.conf"
+        echo "extra-index-url=https://www.piwheels.org/simple" >> "${HOME}/.config/pip/pip.conf"
+        msg "   Added 'extra-index-url=https://www.piwheels.org/simple' to the pip config file."
+      fi
+    fi
+  fi
 
   # While pip alone is sufficient to install from pre-built binary archives, up to date copies of the setuptools and wheel projects are useful to ensure we can also install from source archives
   # e.g. default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
   # script executed like as seafile user, therefore pip upgrade only for seafile user, not system wide; pip installation goes to /home/seafile/.local/lib/python3.6/site-packages
   msg "   Download and update pip(3), setuptools and wheel from PyPI"
-  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel distro --no-warn-script-location)
+  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel --no-warn-script-location)
 
   mkmissingdir "${THIRDPARTYFOLDER}"
 
