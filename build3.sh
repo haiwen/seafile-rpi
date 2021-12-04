@@ -39,6 +39,7 @@ CONF_INSTALL_DEPENDENCIES=false
 CONF_BUILD_LIBEVHTP=false
 CONF_BUILD_LIBSEARPC=false
 CONF_BUILD_SEAFILE=false
+CONF_BUILD_SEAFILE_GO_FILESERVER=false
 CONF_BUILD_SEAHUB=false
 CONF_BUILD_SEAFOBJ=false
 CONF_BUILD_SEAFDAV=false
@@ -104,13 +105,14 @@ Usage:
 
     ${TXT_BOLD}-1${OFF}          Build/update libevhtp
     ${TXT_BOLD}-2${OFF}          Build/update libsearpc
-    ${TXT_BOLD}-3${OFF}          Build/update seafile
-    ${TXT_BOLD}-4${OFF}          Build/update seahub
-    ${TXT_BOLD}-5${OFF}          Build/update seafobj
-    ${TXT_BOLD}-6${OFF}          Build/update seafdav
-    ${TXT_BOLD}-7${OFF}          Build/update Seafile server
+    ${TXT_BOLD}-3${OFF}          Build/update seafile (c_fileserver)
+    ${TXT_BOLD}-4${OFF}          Build/update seafile (go_fileserver)
+    ${TXT_BOLD}-5${OFF}          Build/update seahub
+    ${TXT_BOLD}-6${OFF}          Build/update seafobj
+    ${TXT_BOLD}-7${OFF}          Build/update seafdav
+    ${TXT_BOLD}-8${OFF}          Build/update Seafile server
 
-    ${TXT_BOLD}-A${OFF}          All options ${TXT_BOLD}-1${OFF} to ${TXT_BOLD}-7${OFF} in one go
+    ${TXT_BOLD}-A${OFF}          All options ${TXT_BOLD}-1${OFF} to ${TXT_BOLD}-8${OFF} in one go
 
     ${TXT_BOLD}-v${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set seafile server version to build
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${VERSION}${OFF}
@@ -129,7 +131,7 @@ Usage:
 fi
 
 # get the options
-while getopts ":1234567ADv:r:f:h:d:" OPT; do
+while getopts ":12345678ADv:r:f:h:d:" OPT; do
     case $OPT in
         D) CONF_INSTALL_DEPENDENCIES=true >&2
            STEPS=$((STEPS+2)) >&2
@@ -148,22 +150,27 @@ while getopts ":1234567ADv:r:f:h:d:" OPT; do
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        4) CONF_BUILD_SEAHUB=true >&2
+        4) CONF_BUILD_SEAFILE_GO_FILESERVER=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        5) CONF_BUILD_SEAFOBJ=true >&2
+        5) CONF_BUILD_SEAHUB=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        6) CONF_BUILD_SEAFDAV=true >&2
+        6) CONF_BUILD_SEAFOBJ=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        7) CONF_BUILD_SEAFILE_SERVER=true >&2
+        7) CONF_BUILD_SEAFDAV=true >&2
+           PREP_BUILD=true >&2
+           COPY_PKG_SOURCE=true >&2
+           STEPS=$((STEPS+1)) >&2
+           ;;
+        8) CONF_BUILD_SEAFILE_SERVER=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
@@ -171,6 +178,7 @@ while getopts ":1234567ADv:r:f:h:d:" OPT; do
         A) CONF_BUILD_LIBEVHTP=true >&2
            CONF_BUILD_LIBSEARPC=true >&2
            CONF_BUILD_SEAFILE=true >&2
+	   CONF_BUILD_SEAFILE_GO_FILESERVER=true >&2
            CONF_BUILD_SEAHUB=true >&2
            CONF_BUILD_SEAFOBJ=true >&2
            CONF_BUILD_SEAFDAV=true >&2
@@ -239,6 +247,7 @@ install_dependencies()
      cargo \
      cmake \
      git \
+     golang-go \
      intltool \
      libarchive-dev \
      libcurl4-openssl-dev \
@@ -322,7 +331,7 @@ build_libevhtp()
 export_pkg_config_path()
 {
   STEPCOUNTER=$((STEPCOUNTER+1))
-  msg "-> [${STEPCOUNTER}/${STEPS}] PREPARE libs"
+  msg "-> [${STEPCOUNTER}/${STEPS}] Prepare libs"
   # Export PKG_CONFIG_PATH for seafile-server and libsearpc
   msg "   Export PKG_CONFIG_PATH for seafile-server and libsearpc"
   export PKG_CONFIG_PATH="${BUILDPATH}/libsearpc:${PKG_CONFIG_PATH}"
@@ -360,13 +369,13 @@ build_libsearpc()
 }
 
 #
-# BUILD seafile
+# BUILD seafile (c_fileserver)
 #
 
 build_seafile()
 {
   STEPCOUNTER=$((STEPCOUNTER+1))
-  msg "-> [${STEPCOUNTER}/${STEPS}] Build seafile-server"
+  msg "-> [${STEPCOUNTER}/${STEPS}] Build seafile-server (c_fileserver)"
 
   cd "${BUILDPATH}"
   if [ -d "seafile-server" ]; then
@@ -383,6 +392,31 @@ build_seafile()
   (set -x; ./configure --with-mysql=${MYSQL_CONFIG_PATH} --enable-ldap)
   (set -x; make dist)
   exitonfailure "Build seafile-server failed"
+  cd "${SCRIPTPATH}"
+}
+
+#
+# BUILD seafile (go_fileserver)
+#
+
+build_seafile_go_fileserver()
+{
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  msg "-> [${STEPCOUNTER}/${STEPS}] Build seafile-server (go_fileserver)"
+
+  cd "${BUILDPATH}"
+  if [ -d "seafile-server" ]; then
+    cd seafile-server
+    (set -x; make clean && make distclean)
+    (set -x; git fetch origin --tags)
+    (set -x; git reset --hard origin/master)
+  else
+    (set -x; git clone "https://github.com/haiwen/seafile-server.git")
+    cd seafile-serverr
+  fi
+  (set -x; git reset --hard "${VERSION_TAG}")
+  (set -x; cd "${BUILDPATH}"/seafile-server/fileserver && go build .)
+  exitonfailure "Build seafile-server (go_fileserver) failed"
   cd "${SCRIPTPATH}"
 }
 
@@ -545,7 +579,7 @@ build_seafdav()
 }
 
 #
-# Copy package source
+# COPY package sources
 #
 
 copy_pkg_source()
@@ -557,6 +591,7 @@ copy_pkg_source()
   for i in \
       "${BUILDPATH}/libsearpc/libsearpc-${LIBSEARPC_VERSION_FIXED}.tar.gz" \
       "${BUILDPATH}/seafile-server/seafile-${VERSION_SEAFILE}.tar.gz" \
+      "${BUILDPATH}/seafile-server/fileserver/fileserver" \
       "${BUILDPATH}/seahub/seahub-${VERSION_SEAFILE}.tar.gz" \
       "${BUILDPATH}/seafobj/seafobj.tar.gz" \
       "${BUILDPATH}/seafdav/seafdav.tar.gz"
@@ -566,7 +601,7 @@ copy_pkg_source()
 }
 
 #
-# Build Seafile server
+# BUILD Seafile server
 #
 
 build_server()
@@ -624,6 +659,7 @@ fi
 ${CONF_BUILD_LIBEVHTP} && build_libevhtp 
 ${CONF_BUILD_LIBSEARPC} && build_libsearpc
 ${CONF_BUILD_SEAFILE} && build_seafile
+${CONF_BUILD_SEAFILE_GO_FILESERVER} && build_seafile_go_fileserver
 ${CONF_BUILD_SEAHUB} && build_seahub
 ${CONF_BUILD_SEAFOBJ} && build_seafobj
 ${CONF_BUILD_SEAFDAV} && build_seafdav
