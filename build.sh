@@ -431,7 +431,7 @@ install_thirdparty()
 
   # if distro and arch matches, add piwheels to pip config file
   msg "   Only add \"piwheels\" to pip config file if distro is DEBIAN (Buster or Bullseye) and the architecture is ARM."
-  if [ ${DISTRO} = Debian -o ${DISTRO} = Raspbian ] && [ ${ARCH} = armv7l -o ${ARCH} = armv8l -o ${ARCH} = aarch64 ]; then
+  if [ "${DISTRO}" = Debian -o "${DISTRO}" = Raspbian ] && [ "${ARCH}" = armv7l -o "${ARCH}" = armv8l -o "${ARCH}" = aarch64 ]; then
     msg "   Detected \"${DISTRO}\" distro for \"${ARCH}\". We can make use of \"piwheels\", pre-compiled binary Python packages."
     if [ ! -f "${HOME}/.config/pip/pip.conf" ]; then
       msg "   Adding \"piwheels\" to pip config file under '${HOME}/.config/pip/pip.conf'..."
