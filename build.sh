@@ -1,5 +1,5 @@
 #!/bin/bash
-[[ "$1" =~ ^(--version)$ ]] && { 
+[[ "$1" =~ ^(--version)$ ]] && {
     echo "2021-12-04";
     exit 0
 };
@@ -68,19 +68,19 @@ msg()
   echo -e "\n${TXT_YELLOW}$1${OFF}\n"
 }
 
-error() 
-{ 
+error()
+{
     echo -e "${TXT_LRED}error:${OFF} $1";
     exit 1
 }
 
-alldone() 
-{ 
+alldone()
+{
     echo -e " ${TXT_GREEN}done! ${OFF}"
 }
 
-mkmissingdir() 
-{ 
+mkmissingdir()
+{
     if [ ! -d "${1}" ]; then
         echo -en "create missing directory ${TXT_BLUE}$1${OFF}...";
         mkdir -p "${1}" || error "failed!";
@@ -611,11 +611,11 @@ build_server()
 
   cd "${BUILDPATH}"
   mkmissingdir "${SCRIPTPATH}/${PKGDIR}"
-    if [ ! -f "${SCRIPTPATH}/build-server.py.patch" ] ; then
-    msg "-> ${SCRIPTPATH}/build-server.py.patch not found!. Downloading patch file from GitHub..."
-    (set -x; wget "${BUILD_SERVER_PATCH}" -O "${SCRIPTPATH}/build-server.py.patch")
-  fi
-  msg "-> Patch file found under ${SCRIPTPATH}. Applying build-server.py.patch..."
+
+  msg "-> Copying current build-server.py.patch from GitHub to ${SCRIPTPATH}..."
+  (set -x; wget "${BUILD_SERVER_PATCH}" -O "${SCRIPTPATH}/build-server.py.patch")
+
+  msg "-> Applying patch file from ${SCRIPTPATH}/build-server.py.patch..."
   (set -x; patch -N -b "${BUILDPATH}/seafile-server/scripts/build/build-server.py" "${SCRIPTPATH}/build-server.py.patch")
   msg "-> Executing build-server.py"
   (set -x; python3 "${BUILDPATH}/seafile-server/scripts/build/build-server.py" \
@@ -656,7 +656,7 @@ if ${PREP_BUILD} ; then
     export_pkg_config_path
 fi
 
-${CONF_BUILD_LIBEVHTP} && build_libevhtp 
+${CONF_BUILD_LIBEVHTP} && build_libevhtp
 ${CONF_BUILD_LIBSEARPC} && build_libsearpc
 ${CONF_BUILD_SEAFILE} && build_seafile
 ${CONF_BUILD_SEAFILE_GO_FILESERVER} && build_seafile_go_fileserver
