@@ -1,7 +1,7 @@
-diff --git a/build-server.py.orig b/build-server.py.lgtm
-index dbe8355..d1f0cf0 100755
---- a/build-server.py.orig
-+++ b/build-server.py.lgtm
+diff --git a/scripts/build/build-server.py b/scripts/build/build-server.py
+index a479b6c75..531a5fad1 100755
+--- a/scripts/build/build-server.py
++++ b/scripts/build/build-server.py
 @@ -25,6 +25,7 @@ import subprocess
  import optparse
  import atexit
@@ -26,7 +26,40 @@ index dbe8355..d1f0cf0 100755
  def copy_seafdav():
      dst_dir = os.path.join(conf[CONF_BUILDDIR], 'seafile-server', 'seahub', 'thirdpart')
      tarball = os.path.join(conf[CONF_SRCDIR], 'seafdav.tar.gz')
-@@ -622,6 +632,9 @@ def copy_scripts_and_libs():
+@@ -556,7 +566,8 @@ def copy_scripts_and_libs():
+ 
+     '''
+     builddir = conf[CONF_BUILDDIR]
+-    scripts_srcdir = os.path.join(builddir, Seafile().projdir, 'scripts')
++    src_seahubdir = Seahub().projdir
++    scripts_srcdir = os.path.join(builddir, src_seahubdir, 'scripts')
+     serverdir = os.path.join(builddir, 'seafile-server')
+ 
+     must_copy(os.path.join(scripts_srcdir, 'setup-seafile.sh'),
+@@ -588,14 +599,6 @@ def copy_scripts_and_libs():
+     except Exception as e:
+         error('failed to copy upgrade scripts: %s' % e)
+ 
+-    # copy sql scripts
+-    sql_scriptsdir = os.path.join(scripts_srcdir, 'sql')
+-    dst_sql_scriptsdir = os.path.join(serverdir, 'sql')
+-    try:
+-        shutil.copytree(sql_scriptsdir, dst_sql_scriptsdir)
+-    except Exception as e:
+-        error('failed to copy sql scripts: %s' % e)
+-
+     # copy runtime/seahub.conf
+     runtimedir = os.path.join(serverdir, 'runtime')
+     must_mkdir(runtimedir)
+@@ -603,7 +606,6 @@ def copy_scripts_and_libs():
+               runtimedir)
+ 
+     # move seahub to seafile-server/seahub
+-    src_seahubdir = Seahub().projdir
+     dst_seahubdir = os.path.join(serverdir, 'seahub')
+     try:
+         shutil.move(src_seahubdir, dst_seahubdir)
+@@ -622,6 +624,9 @@ def copy_scripts_and_libs():
      copy_shared_libs()
      copy_user_manuals()
  
@@ -36,7 +69,7 @@ index dbe8355..d1f0cf0 100755
  def copy_pdf2htmlex():
      '''Copy pdf2htmlEX exectuable and its dependent libs'''
      pdf2htmlEX_executable = find_in_path('pdf2htmlEX')
-@@ -785,10 +798,14 @@ def create_tarball(tarball_name):
+@@ -785,10 +790,14 @@ def create_tarball(tarball_name):
      excludes_list = [ '--exclude=%s' % pattern for pattern in ignored_patterns ]
      excludes = ' '.join(excludes_list)
  
@@ -53,7 +86,7 @@ index dbe8355..d1f0cf0 100755
  
      if run(tar_cmd) < 0:
          error('failed to generate the tarball')
-@@ -806,17 +823,20 @@ def gen_tarball():
+@@ -806,17 +815,20 @@ def gen_tarball():
      # 32-bit: seafile-server_1.2.2_i386.tar.gz
      version = conf[CONF_VERSION]
      arch = os.uname()[-1].replace('_', '-')
