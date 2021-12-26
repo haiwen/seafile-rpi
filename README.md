@@ -7,13 +7,13 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 ## Build
 
 E.g. to compile Seafile server v9.0.2:
-```
+```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
 $ ./build.sh -D -A -v 9.0.2
 ```
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
-```
+```shell
 seafile@rpi-focal:~$ ./build.sh
 
 Usage:
@@ -70,6 +70,16 @@ seafile@rpi-focal:~$ tree . -L 3
 └── opt
     └── local
 ```
+
+## Batch Build
+
+If you want to build for multiple distributions and architectures via lxc containers you can run:
+```shell
+$ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-batch.sh
+$ chmod u+x build-batch.sh
+$ time bash ./build-batch.sh 9.0.2
+```
+Edit the script in order to build for your preferred distributions.
 
 ## Manual and Guides
 
