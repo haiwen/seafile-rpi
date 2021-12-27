@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && {
-    echo "2021-12-04";
+    echo "2021-12-26";
     exit 0
 };
 
@@ -18,11 +18,11 @@ DISTRO=`lsb_release -d | awk '{ print $2 }'`
 ARCH=$(arch)
 PREFIX="${HOME}/opt/local"
 # Temporary folder for seafile-server dependency builds for shared libraries (ld)
-# see https://github.com/haiwen/seafile-server/blob/193ec9381e8210f35fb9c416932b51c6166ebed6/scripts/build/build-server.py#L345
+# see https://github.com/haiwen/seahub/blob/eab3ba2f6d3a311728130d8752c716e782b8d62e/scripts/build/build-server.py#L324
 
 LIBSEARPC_VERSION_LATEST="3.2-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
-VERSION="9.0.1"
+VERSION="9.0.2"
 VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)
 MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql support
 
@@ -412,7 +412,7 @@ build_seafile_go_fileserver()
     (set -x; git reset --hard origin/master)
   else
     (set -x; git clone "https://github.com/haiwen/seafile-server.git")
-    cd seafile-serverr
+    cd seafile-server
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; cd "${BUILDPATH}"/seafile-server/fileserver && go build .)
@@ -616,9 +616,9 @@ build_server()
   (set -x; wget "${BUILD_SERVER_PATCH}" -O "${SCRIPTPATH}/build-server.py.patch")
 
   msg "-> Applying patch file from ${SCRIPTPATH}/build-server.py.patch..."
-  (set -x; patch -N -b "${BUILDPATH}/seafile-server/scripts/build/build-server.py" "${SCRIPTPATH}/build-server.py.patch")
+  (set -x; patch -N -b "${BUILDPATH}/seahub/scripts/build/build-server.py" "${SCRIPTPATH}/build-server.py.patch")
   msg "-> Executing build-server.py"
-  (set -x; python3 "${BUILDPATH}/seafile-server/scripts/build/build-server.py" \
+  (set -x; python3 "${BUILDPATH}/seahub/scripts/build/build-server.py" \
     --libsearpc_version="${LIBSEARPC_VERSION_FIXED}" \
     --seafile_version="${VERSION_SEAFILE}" \
     --version="${VERSION}" \

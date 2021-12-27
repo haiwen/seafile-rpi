@@ -6,14 +6,14 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 
 ## Build
 
-E.g. to compile Seafile server v9.0.1:
-```
+E.g. to compile Seafile server v9.0.2:
+```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
-$ ./build.sh -D -A -v 9.0.1
+$ ./build.sh -D -A -v 9.0.2
 ```
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
-```
+```shell
 seafile@rpi-focal:~$ ./build.sh
 
 Usage:
@@ -34,15 +34,15 @@ Usage:
     -A          All options -1 to -8 in one go
 
     -v <vers>   Set seafile server version to build
-                default: 9.0.1
+                default: 9.0.2
     -r <vers>   Set libsearpc version
                 default: 3.2-latest
     -f <vers>   Set fixed libsearpc version
                 default: 3.1.0
     -h <vers>   Set python requirement file for seahub
-                default: https://raw.githubusercontent.com/haiwen/seahub/v9.0.1-server/requirements.txt
+                default: https://raw.githubusercontent.com/haiwen/seahub/v9.0.2-server/requirements.txt
     -d <vers>   Set python requirement file for seafdav
-                default: https://raw.githubusercontent.com/haiwen/seafdav/v9.0.1-server/requirements.txt
+                default: https://raw.githubusercontent.com/haiwen/seafdav/v9.0.2-server/requirements.txt
 
     use --version for version info of this script.
 ```
@@ -54,9 +54,9 @@ seafile@rpi-focal:~$ tree . -L 3
 ├── build.sh
 ├── build-server.py.patch
 ├── built-seafile-server-pkgs
-│   └── seafile-server-9.0.1-focal-armv7l.tar.gz
+│   └── seafile-server-9.0.2-focal-armv7l.tar.gz
 ├── built-seafile-sources
-│   └── R9.0.1
+│   └── R9.0.2
 ├── go
 │   └── pkg
 ├── haiwen-build
@@ -70,6 +70,16 @@ seafile@rpi-focal:~$ tree . -L 3
 └── opt
     └── local
 ```
+
+## Batch Build
+
+If you want to build for multiple distributions and architectures via lxc containers you can run:
+```shell
+$ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-batch.sh
+$ chmod u+x build-batch.sh
+$ time bash ./build-batch.sh 9.0.2
+```
+Edit the script in order to build for your preferred distributions.
 
 ## Manual and Guides
 
