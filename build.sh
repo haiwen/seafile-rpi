@@ -239,11 +239,11 @@ install_dependencies()
   # onigposix (libonig-dev) is dependency for /usr/local/include/evhtp.h
 
   msg "Downloads the package lists from the repositories and updates them"
-  (set -x; sudo apt update)
+  (set -x; sudo apt-get update)
   msg "Install build-essential package"
-  (set -x; sudo apt install -y build-essential)
+  (set -x; sudo apt-get install -y build-essential)
   msg "Install build dependencies"
-  (set -x; sudo apt install -y \
+  (set -x; sudo apt-get install -y \
      cargo \
      cmake \
      git \
@@ -456,7 +456,7 @@ install_thirdparty()
   # e.g. default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
   # script executed like as seafile user, therefore pip upgrade only for seafile user, not system wide; pip installation goes to /home/seafile/.local/lib/python3.6/site-packages
   msg "   Download and update pip(3), setuptools and wheel from PyPI"
-  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel --no-warn-script-location)
+  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel)
 
   mkmissingdir "${THIRDPARTYFOLDER}"
 
