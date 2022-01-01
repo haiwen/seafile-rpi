@@ -63,7 +63,8 @@ for container in ${lxcContainers[@]}; do
 
   echo "Execute build.sh for $container"
   sudo lxc exec $container -- su - seafile -- ./build.sh -D -A -v $VERSION
-  sudo lxc file pull $container/home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-$distroName-$architecture.tar.gz ./
+  filename=$(sudo lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
+  sudo lxc file pull "$container$filename" ./
 
   echo -e "Build finished for container $container\n\n"
   sudo lxc stop $container
