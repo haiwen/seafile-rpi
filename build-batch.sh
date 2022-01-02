@@ -62,8 +62,14 @@ for container in ${lxcContainers[@]}; do
   sudo lxc file push build.sh $container/home/seafile/
 
   echo "Execute build.sh for $container"
+  while [ "$(sudo lxc exec ${container} -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
+      echo -e "\e[1A\e[KNo network available in $container: $(date)"
+      sleep .5
+  done
+  echo -e "\e[1A\e[KNetwork available in $container";
   sudo lxc exec $container -- su - seafile -- ./build.sh -D -A -v $VERSION
-  sudo lxc file pull $container/home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-$distroName-$architecture.tar.gz ./
+  filename=$(sudo lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
+  sudo lxc file pull "$container$filename" ./
 
   echo -e "Build finished for container $container\n\n"
   sudo lxc stop $container
