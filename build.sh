@@ -252,7 +252,6 @@ install_dependencies()
      libarchive-dev \
      libcurl4-openssl-dev \
      libevent-dev \
-     libffi6 \
      libffi-dev \
      libfuse-dev \
      libglib2.0-dev \
