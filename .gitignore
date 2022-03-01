@@ -6,3 +6,11 @@ seafile-server-pkgs/
 # build artefacts
 .build.sh.swp
 
+# MacOS
+.DS_Store
+
+# IntelliJ
+.idea
+
+# VSCode
+.vscode
