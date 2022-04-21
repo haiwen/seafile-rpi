@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && {
-    echo "2021-12-26";
+    echo "2022-04-21";
     exit 0
 };
 
@@ -36,6 +36,7 @@ STEPS=0
 STEPCOUNTER=0
 
 CONF_INSTALL_DEPENDENCIES=false
+CONF_INSTALL_THIRDPART=false
 CONF_BUILD_LIBEVHTP=false
 CONF_BUILD_LIBSEARPC=false
 CONF_BUILD_SEAFILE=false
@@ -101,7 +102,8 @@ Usage:
   ${TXT_BOLD}build.sh${OFF} ${TXT_DGRAY}${TXT_ITALIC}[OPTIONS]${OFF}
 
   ${TXT_UNDERSCORE}OPTIONS${OFF}:
-    ${TXT_BOLD}-D${OFF}          Install dependencies and thirdparty requirements
+    ${TXT_BOLD}-D${OFF}          Install build dependencies
+    ${TXT_BOLD}-T${OFF}          Install thirdparty requirements
 
     ${TXT_BOLD}-1${OFF}          Build/update libevhtp
     ${TXT_BOLD}-2${OFF}          Build/update libsearpc
@@ -131,10 +133,13 @@ Usage:
 fi
 
 # get the options
-while getopts ":12345678ADv:r:f:h:d:" OPT; do
+while getopts ":12345678ADTv:r:f:h:d:" OPT; do
     case $OPT in
         D) CONF_INSTALL_DEPENDENCIES=true >&2
-           STEPS=$((STEPS+2)) >&2
+           STEPS=$((STEPS+1)) >&2
+           ;;
+        T) CONF_INSTALL_THIRDPART=true >&2
+           STEPS=$((STEPS+1)) >&2
            ;;
         1) CONF_BUILD_LIBEVHTP=true >&2
            PREP_BUILD=true >&2
@@ -178,7 +183,7 @@ while getopts ":12345678ADv:r:f:h:d:" OPT; do
         A) CONF_BUILD_LIBEVHTP=true >&2
            CONF_BUILD_LIBSEARPC=true >&2
            CONF_BUILD_SEAFILE=true >&2
-	   CONF_BUILD_SEAFILE_GO_FILESERVER=true >&2
+           CONF_BUILD_SEAFILE_GO_FILESERVER=true >&2
            CONF_BUILD_SEAHUB=true >&2
            CONF_BUILD_SEAFOBJ=true >&2
            CONF_BUILD_SEAFDAV=true >&2
@@ -647,15 +652,13 @@ echo_complete()
 
 echo_start
 
-if ${CONF_INSTALL_DEPENDENCIES} ; then
-    install_dependencies
-    install_thirdparty
-fi
-
 if ${PREP_BUILD} ; then
     prepare_build
     export_pkg_config_path
 fi
+
+${CONF_INSTALL_DEPENDENCIES} && install_dependencies
+${CONF_INSTALL_THIRDPART} && install_thirdparty
 
 ${CONF_BUILD_LIBEVHTP} && build_libevhtp
 ${CONF_BUILD_LIBSEARPC} && build_libsearpc

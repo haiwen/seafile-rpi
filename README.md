@@ -10,7 +10,7 @@ E.g. to compile Seafile server v9.0.2:
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
-$ ./build.sh -D -A -v 9.0.2
+$ ./build.sh -DTA -v 9.0.2
 ```
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
 ```shell
@@ -20,7 +20,8 @@ Usage:
   build.sh [OPTIONS]
 
   OPTIONS:
-    -D          Install dependencies and thirdparty requirements
+    -D          Install build dependencies
+    -T          Install thirdparty requirements
 
     -1          Build/update libevhtp
     -2          Build/update libsearpc
