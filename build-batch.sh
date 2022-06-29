@@ -70,7 +70,7 @@ for container in ${lxcContainers[@]}; do
       sleep .5
   done
   echo -e "\e[1A\e[KNetwork available in $container";
-  sudo lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION
+  sudo lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v${VERSION}.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v${VERSION}.txt
   filename=$(sudo lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
   sudo lxc file pull "$container$filename" ./
 

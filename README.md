@@ -7,12 +7,15 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 ## Build
 
 E.g. to compile Seafile server v9.0.5:
+
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
-$ ./build.sh -DTA -v 9.0.5
+$ ./build.sh -DTA -v 9.0.5 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v9.0.5.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v9.0.5.txt
 ```
+
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
+
 ```shell
 seafile@rpi-focal:~$ ./build.sh
 
@@ -49,6 +52,7 @@ Usage:
 ```
 
 Schema of created directory structure after execution of `./build.sh`:
+
 ```
 seafile@rpi-focal:~$ tree . -L 3
 .
@@ -75,11 +79,13 @@ seafile@rpi-focal:~$ tree . -L 3
 ## Batch Build
 
 If you want to build for multiple distributions and architectures via lxc containers you can run:
+
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-batch.sh
 $ chmod u+x build-batch.sh
 $ time bash ./build-batch.sh 9.0.5
 ```
+
 Edit the script in order to build for your preferred distributions.
 
 ## Manual and Guides
@@ -89,9 +95,11 @@ Edit the script in order to build for your preferred distributions.
 
 ## Reporting Issues / GitHub Issues
 
-If you have any problems or suggestions when using the seafile rpi server package, please report it on [seafile server forum](https://forum.seafile.com/). 
+If you have any problems or suggestions when using the seafile rpi server package, please report it
+on [seafile server forum](https://forum.seafile.com/).
 
-**GitHub Issues support is dropped** and will not  be maintained anymore. If you need help, clarification or report some weird behaviour, please post it on the [seafile server forum](https://forum.seafile.com/) as well.
+**GitHub Issues support is dropped** and will not be maintained anymore. If you need help, clarification or report some
+weird behaviour, please post it on the [seafile server forum](https://forum.seafile.com/) as well.
 
 ## Contributors
 
