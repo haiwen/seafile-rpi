@@ -20,7 +20,7 @@ PREFIX="${HOME}/opt/local"
 # Temporary folder for seafile-server dependency builds for shared libraries (ld)
 # see https://github.com/haiwen/seahub/blob/eab3ba2f6d3a311728130d8752c716e782b8d62e/scripts/build/build-server.py#L324
 
-LIBSEARPC_VERSION_LATEST="3.2-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
+LIBSEARPC_VERSION_LATEST="3.3-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
 VERSION="9.0.9"
 VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)

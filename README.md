@@ -40,7 +40,7 @@ Usage:
     -v <vers>   Set seafile server version to build
                 default: 9.0.9
     -r <vers>   Set libsearpc version
-                default: 3.2-latest
+                default: 3.3-latest
     -f <vers>   Set fixed libsearpc version
                 default: 3.1.0
     -h <vers>   Set python requirement file for seahub
