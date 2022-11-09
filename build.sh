@@ -30,7 +30,6 @@ VERSION_TAG="v${VERSION}-server"
 LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}"
 PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt"  # official requirements.txt file
 PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt"
-BUILD_SERVER_PATCH="https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-server.py.patch"
 
 STEPS=0
 STEPCOUNTER=0
@@ -618,11 +617,6 @@ build_server()
   cd "${BUILDPATH}"
   mkmissingdir "${SCRIPTPATH}/${PKGDIR}"
 
-  msg "-> Copying current build-server.py.patch from GitHub to ${SCRIPTPATH}..."
-  (set -x; wget "${BUILD_SERVER_PATCH}" -O "${SCRIPTPATH}/build-server.py.patch")
-
-  msg "-> Applying patch file from ${SCRIPTPATH}/build-server.py.patch..."
-  (set -x; patch -N -b "${BUILDPATH}/seahub/scripts/build/build-server.py" "${SCRIPTPATH}/build-server.py.patch")
   msg "-> Executing build-server.py"
   (set -x; python3 "${BUILDPATH}/seahub/scripts/build/build-server.py" \
     --libsearpc_version="${LIBSEARPC_VERSION_FIXED}" \
