@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the version which needs to be build
-VERSION=${1:-'9.0.5'}
+VERSION=${1:-'9.0.9'}
 
 echo "Get the current build script"
 wget -O build.sh https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
