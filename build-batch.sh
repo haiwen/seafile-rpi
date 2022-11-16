@@ -11,7 +11,7 @@ chmod u+x build.sh
 sysArch=$(arch)
 [ "$sysArch" == "aarch64" ] && archhfName='armv8l' || archhfName='armv7l'
 
-declare -A lxcDistroMap=(["bullseye"]="debian/11/" ["buster"]="debian/10/" ["stretch"]="debian/9/" ["jammy"]="ubuntu/22.04/" ["hirsute"]="ubuntu/21.04/" ["focal"]="ubuntu/20.04/" ["bionic"]="ubuntu/18.04/")
+declare -A lxcDistroMap=(["bullseye"]="debian/11/" ["buster"]="debian/10/" ["stretch"]="debian/9/" ["kinetic"]="ubuntu/22.10/" ["jammy"]="ubuntu/22.04/" ["focal"]="ubuntu/20.04/" ["bionic"]="ubuntu/18.04/")
 
 # Assign the distros which need to be build
 configLxcDistros=("jammy" "focal" "bionic" "bullseye" "buster")
