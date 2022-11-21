@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && {
-    echo "2022-04-21";
+    echo "2022-11-09";
     exit 0
 };
 
@@ -20,9 +20,9 @@ PREFIX="${HOME}/opt/local"
 # Temporary folder for seafile-server dependency builds for shared libraries (ld)
 # see https://github.com/haiwen/seahub/blob/eab3ba2f6d3a311728130d8752c716e782b8d62e/scripts/build/build-server.py#L324
 
-LIBSEARPC_VERSION_LATEST="3.2-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
+LIBSEARPC_VERSION_LATEST="3.3-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
-VERSION="9.0.2"
+VERSION="9.0.9"
 VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)
 MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql support
 
@@ -30,7 +30,6 @@ VERSION_TAG="v${VERSION}-server"
 LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}"
 PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt"  # official requirements.txt file
 PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt"
-BUILD_SERVER_PATCH="https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-server.py.patch"
 
 STEPS=0
 STEPCOUNTER=0
@@ -618,11 +617,6 @@ build_server()
   cd "${BUILDPATH}"
   mkmissingdir "${SCRIPTPATH}/${PKGDIR}"
 
-  msg "-> Copying current build-server.py.patch from GitHub to ${SCRIPTPATH}..."
-  (set -x; wget "${BUILD_SERVER_PATCH}" -O "${SCRIPTPATH}/build-server.py.patch")
-
-  msg "-> Applying patch file from ${SCRIPTPATH}/build-server.py.patch..."
-  (set -x; patch -N -b "${BUILDPATH}/seahub/scripts/build/build-server.py" "${SCRIPTPATH}/build-server.py.patch")
   msg "-> Executing build-server.py"
   (set -x; python3 "${BUILDPATH}/seahub/scripts/build/build-server.py" \
     --libsearpc_version="${LIBSEARPC_VERSION_FIXED}" \

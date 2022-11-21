@@ -1,0 +1,27 @@
+# See: https://github.com/haiwen/seafile-rpi/issues/99#issuecomment-1002535579
+Django<4
+future
+captcha
+django-statici18n
+django-webpack_loader==0.7.0
+gunicorn
+mysqlclient
+django-picklefield>=2.1.1
+openpyxl
+qrcode
+django-formtools>=2.3
+django-simple-captcha
+djangorestframework>=3.11.1
+python-dateutil
+requests
+pillow
+pyjwt>=2.1.*
+pycryptodome>=3.12.0
+requests_oauthlib
+chardet
+python-cas
+djangosaml2>=0.20.0
+pysaml2>=6.5.1
+cffi>=1.14.0
+# input from @nihilistaX see https://github.com/haiwen/seafile-rpi/issues/99
+cryptography==36.0.0
