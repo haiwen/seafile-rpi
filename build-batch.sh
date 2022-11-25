@@ -22,17 +22,17 @@ if [[ "$sysArch" == "aarch64" ]]; then
 fi
 
 lxcContainers=()
-for lxcArch in ${configLxcArchs[@]}; do
-  for lxcDistro in ${configLxcDistros[@]}; do
+for lxcArch in "${configLxcArchs[@]}"; do
+  for lxcDistro in "${configLxcDistros[@]}"; do
     lxcContainers+=("${lxcDistro}-${lxcArch}")
   done
 done
 
 echo "Building following distributions and architectures: "
-echo ${lxcContainers[@]}
+echo "${lxcContainers[@]}"
 
 # Execute the builds
-for container in ${lxcContainers[@]}; do
+for container in "${lxcContainers[@]}"; do
   archShort=${container#*-}
   distroName=${container%-*}
   [ "$archShort" == "arm64" ] && architecture='aarch64' || architecture=$archhfName
@@ -51,8 +51,10 @@ for container in ${lxcContainers[@]}; do
   else
     echo "Launching Lxc images:${lxcDistroMap[$distroName]}$archShort $container"
     sudo lxc launch images:"${lxcDistroMap[$distroName]}"$archShort $container
+  fi
 
-    # Add 'seafile' as super user
+  if ! id seafile &>/dev/null; then
+    echo "Add 'seafile' as super user"
     sudo lxc exec $container -- apt install sudo
     sudo lxc exec $container -- useradd -m -s /bin/bash seafile
     sudo lxc exec $container -- /bin/bash -c "echo 'seafile ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo"
@@ -65,12 +67,19 @@ for container in ${lxcContainers[@]}; do
   sudo lxc file push build.sh $container/home/seafile/
 
   echo "Execute build.sh for $container"
+  NETWORK_ATTEMPTS=0
   while [ "$(sudo lxc exec ${container} -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
-      echo -e "\e[1A\e[KNo network available in $container: $(date)"
-      sleep .5
+    echo -e "\e[1A\e[KNo network available in $container: $(date)"
+    if [ $NETWORK_ATTEMPTS -gt 120 ]; then
+      continue 2
+    fi
+    ((NETWORK_ATTEMPTS++))
+    sleep .5
   done
-  echo -e "\e[1A\e[KNetwork available in $container";
-  sudo lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v${VERSION}.txt -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt
+  echo -e "\e[1A\e[KNetwork available in $container"
+  sudo lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION \
+    -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v${VERSION}.txt \
+    -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt
   filename=$(sudo lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
   sudo lxc file pull "$container$filename" ./
 
