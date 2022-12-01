@@ -420,7 +420,7 @@ build_seafile_go_fileserver()
     cd seafile-server
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
-  (set -x; cd "${BUILDPATH}"/seafile-server/fileserver && go build .)
+  (set -x; cd fileserver && go build .)
   exitonfailure "Build seafile-server (go_fileserver) failed"
   cd "${SCRIPTPATH}"
 }

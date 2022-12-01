@@ -53,7 +53,7 @@ for container in "${lxcContainers[@]}"; do
     sudo lxc launch images:"${lxcDistroMap[$distroName]}"$archShort $container
   fi
 
-  if ! id seafile &>/dev/null; then
+  if ! lxc exec $container -- id seafile &>/dev/null; then
     echo "Add 'seafile' as super user"
     sudo lxc exec $container -- apt install sudo
     sudo lxc exec $container -- useradd -m -s /bin/bash seafile
