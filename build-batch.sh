@@ -61,7 +61,7 @@ for container in "${lxcContainers[@]}"; do
   fi
 
   echo "Upgrade container packages: $container"
-  sudo lxc exec $container -- apt-get update && apt-get -y upgrade
+  sudo lxc exec $container -- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
   echo "Building for container: $container"
   sudo lxc file push build.sh $container/home/seafile/
