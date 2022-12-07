@@ -86,9 +86,9 @@ for container in "${lxcContainers[@]}"; do
   lxc exec $container -- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
   echo "Execute build.sh for $container"
-  lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION \
+  lxc exec $container -- su - seafile -c "sudo ./build.sh -DTA -v $VERSION \
     -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v${VERSION}.txt \
-    -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt
+    -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt"
   filename=$(lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
   lxc file pull "$container$filename" ./
 
