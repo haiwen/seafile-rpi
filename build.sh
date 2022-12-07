@@ -243,11 +243,11 @@ install_dependencies()
   # onigposix (libonig-dev) is dependency for /usr/local/include/evhtp.h
 
   msg "Downloads the package lists from the repositories and updates them"
-  (set -x; sudo apt-get update)
+  (set -x; apt-get update)
   msg "Install build-essential package"
-  (set -x; sudo apt-get install -y build-essential)
+  (set -x; apt-get install -y build-essential)
   msg "Install build dependencies"
-  (set -x; sudo apt-get install -y \
+  (set -x; apt-get install -y \
      cargo \
      cmake \
      git \

@@ -11,13 +11,13 @@ E.g. to compile Seafile server v9.0.9:
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
-$ ./build.sh -DTA -v 9.0.9 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v9.0.9.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v9.0.9.txt
+$ sudo ./build.sh -DTA -v 9.0.9 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v9.0.9.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v9.0.9.txt
 ```
 
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
 
 ```shell
-seafile@rpi-focal:~$ ./build.sh
+seafile@rpi-focal:~$ sudo ./build.sh
 
 Usage:
   build.sh [OPTIONS]
@@ -83,7 +83,7 @@ If you want to build for multiple distributions and architectures via lxc contai
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-batch.sh
 $ chmod u+x build-batch.sh
-$ time bash ./build-batch.sh 9.0.9
+$ sudo time bash ./build-batch.sh 9.0.9
 ```
 
 Edit the script in order to build for your preferred distributions.

@@ -42,50 +42,58 @@ for container in "${lxcContainers[@]}"; do
 
   exists=false
   {
-    sudo lxc info $container &&
+    lxc info $container &&
       exists=true
   }
   if $exists; then
     echo "Starting existing Lxc image $container"
-    sudo lxc start $container
+    lxc start $container
   else
     echo "Launching Lxc images:${lxcDistroMap[$distroName]}$archShort $container"
-    sudo lxc launch images:"${lxcDistroMap[$distroName]}"$archShort $container
+    lxc launch images:"${lxcDistroMap[$distroName]}"$archShort $container
   fi
 
+  if ! lxc exec $container -- /bin/bash -c "sudo -v &>/dev/null"; then
+    echo "Install 'sudo'"
+    lxc exec $container -- apt install sudo
+  fi
+  
   if ! lxc exec $container -- id seafile &>/dev/null; then
-    echo "Add 'seafile' as super user"
-    sudo lxc exec $container -- apt install sudo
-    sudo lxc exec $container -- useradd -m -s /bin/bash seafile
-    sudo lxc exec $container -- /bin/bash -c "echo 'seafile ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo"
+    echo "Add 'seafile' as user"
+    lxc exec $container -- useradd -m -s /bin/bash seafile
+  fi
+
+  if ! lxc exec $container -- /bin/bash -c "sudo -l -U seafile &>/dev/null"; then
+    echo "Give 'seafile' super user privileges"
+    lxc exec $container -- /bin/bash -c "echo 'seafile ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo"
   fi
 
   echo "Building for container: $container"
-  sudo lxc file push build.sh $container/home/seafile/
+  lxc file push build.sh $container/home/seafile/
 
   NETWORK_ATTEMPTS=0
-  while [ "$(sudo lxc exec ${container} -- su - seafile -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
-    echo -e "\e[1A\e[KNo network available in $container: $(date)"
+  while [ "$(lxc exec ${container} -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
+    ((NETWORK_ATTEMPTS++))
+    echo -e "\e[1A\e[KNo network available in $container (attempt $NETWORK_ATTEMPTS): $(date)"
     if [ $NETWORK_ATTEMPTS -gt 120 ]; then
       continue 2
     fi
-    ((NETWORK_ATTEMPTS++))
     sleep .5
   done
   echo -e "\e[1A\e[KNetwork available in $container"
-  
+
   echo "Upgrade container packages: $container"
-  sudo lxc exec $container -- su - seafile -- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+  lxc exec $container -- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
   echo "Execute build.sh for $container"
-  sudo lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION \
+  lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION \
     -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v${VERSION}.txt \
     -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt
-  filename=$(sudo lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
-  sudo lxc file pull "$container$filename" ./
+  filename=$(lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
+  lxc file pull "$container$filename" ./
 
   echo -e "Build finished for container $container\n\n"
-  sudo lxc stop $container
+  lxc stop $container
 done
 
 echo "Building distros finished"
