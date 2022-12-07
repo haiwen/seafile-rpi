@@ -60,15 +60,11 @@ for container in "${lxcContainers[@]}"; do
     sudo lxc exec $container -- /bin/bash -c "echo 'seafile ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo"
   fi
 
-  echo "Upgrade container packages: $container"
-  sudo lxc exec $container -- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
-
   echo "Building for container: $container"
   sudo lxc file push build.sh $container/home/seafile/
 
-  echo "Execute build.sh for $container"
   NETWORK_ATTEMPTS=0
-  while [ "$(sudo lxc exec ${container} -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
+  while [ "$(sudo lxc exec ${container} -- su - seafile -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
     echo -e "\e[1A\e[KNo network available in $container: $(date)"
     if [ $NETWORK_ATTEMPTS -gt 120 ]; then
       continue 2
@@ -77,6 +73,11 @@ for container in "${lxcContainers[@]}"; do
     sleep .5
   done
   echo -e "\e[1A\e[KNetwork available in $container"
+  
+  echo "Upgrade container packages: $container"
+  sudo lxc exec $container -- su - seafile -- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+
+  echo "Execute build.sh for $container"
   sudo lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION \
     -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v${VERSION}.txt \
     -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt
