@@ -88,6 +88,11 @@ $ sudo time bash ./build-batch.sh 9.0.9
 
 Edit the script in order to build for your preferred distributions.
 
+If want to execute the script in the background with logs written to `build-batch.log` call:
+```shell
+sudo nohup bash -c "time bash ./build-batch.sh 9.0.9" >build-batch.log 2>build-batch.log < /dev/null &
+```
+
 ## Manual and Guides
 
 - [Build Seafile server](https://manual.seafile.com/build_seafile/rpi/)
