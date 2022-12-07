@@ -53,7 +53,7 @@ for container in "${lxcContainers[@]}"; do
     lxc launch images:"${lxcDistroMap[$distroName]}"$archShort $container
   fi
 
-  if ! lxc exec $container -- /bin/bash -c "sudo -v &>/dev/null"; then
+  if ! lxc exec $container -- /bin/bash -c "sudo -V" &>/dev/null; then
     echo "Install 'sudo'"
     lxc exec $container -- apt install sudo
   fi
@@ -63,7 +63,7 @@ for container in "${lxcContainers[@]}"; do
     lxc exec $container -- useradd -m -s /bin/bash seafile
   fi
 
-  if ! lxc exec $container -- /bin/bash -c "sudo -l -U seafile &>/dev/null"; then
+  if ! lxc exec $container -- /bin/bash -c "sudo -l -U seafile" &>/dev/null; then
     echo "Give 'seafile' super user privileges"
     lxc exec $container -- /bin/bash -c "echo 'seafile ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo"
   fi
