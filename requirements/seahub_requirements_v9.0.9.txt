@@ -24,6 +24,6 @@ djangosaml2>=0.20.0
 pysaml2>=6.5.1
 cffi>=1.14.0
 # input from @nihilistaX see https://github.com/haiwen/seafile-rpi/issues/99
-cryptography==36.0.0
+cryptography==39.0.1
 Markdown
 bleach
