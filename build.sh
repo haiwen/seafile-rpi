@@ -261,6 +261,7 @@ install_dependencies()
      libglib2.0-dev \
      libjansson-dev \
      libjpeg-dev \
+     libjwt-dev \
      libldap2-dev \
      libmariadbclient-dev-compat \
      libonig-dev \
