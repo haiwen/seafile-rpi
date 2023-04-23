@@ -30,10 +30,11 @@ Usage:
     -2          Build/update libsearpc
     -3          Build/update seafile (c_fileserver)
     -4          Build/update seafile (go_fileserver)
-    -5          Build/update seahub
-    -6          Build/update seafobj
-    -7          Build/update seafdav
-    -8          Build/update Seafile server
+    -5          Build/update seafile (notification_server)
+    -6          Build/update seahub
+    -7          Build/update seafobj
+    -8          Build/update seafdav
+    -9          Build/update Seafile server
 
     -A          All options -1 to -8 in one go
 
