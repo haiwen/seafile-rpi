@@ -22,17 +22,17 @@ if [[ "$sysArch" == "aarch64" ]]; then
 fi
 
 lxcContainers=()
-for lxcArch in ${configLxcArchs[@]}; do
-  for lxcDistro in ${configLxcDistros[@]}; do
+for lxcArch in "${configLxcArchs[@]}"; do
+  for lxcDistro in "${configLxcDistros[@]}"; do
     lxcContainers+=("${lxcDistro}-${lxcArch}")
   done
 done
 
 echo "Building following distributions and architectures: "
-echo ${lxcContainers[@]}
+echo "${lxcContainers[@]}"
 
 # Execute the builds
-for container in ${lxcContainers[@]}; do
+for container in "${lxcContainers[@]}"; do
   archShort=${container#*-}
   distroName=${container%-*}
   [ "$archShort" == "arm64" ] && architecture='aarch64' || architecture=$archhfName
@@ -42,40 +42,58 @@ for container in ${lxcContainers[@]}; do
 
   exists=false
   {
-    sudo lxc info $container &&
+    lxc info $container &&
       exists=true
   }
   if $exists; then
     echo "Starting existing Lxc image $container"
-    sudo lxc start $container
+    lxc start $container
   else
     echo "Launching Lxc images:${lxcDistroMap[$distroName]}$archShort $container"
-    sudo lxc launch images:"${lxcDistroMap[$distroName]}"$archShort $container
-
-    # Add 'seafile' as super user
-    sudo lxc exec $container -- apt install sudo
-    sudo lxc exec $container -- useradd -m -s /bin/bash seafile
-    sudo lxc exec $container -- /bin/bash -c "echo 'seafile ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo"
+    lxc launch images:"${lxcDistroMap[$distroName]}"$archShort $container
   fi
 
-  echo "Upgrade container packages: $container"
-  sudo lxc exec $container -- apt-get update && apt-get -y upgrade
+  if ! lxc exec $container -- /bin/bash -c "sudo -V" &>/dev/null; then
+    echo "Install 'sudo'"
+    lxc exec $container -- apt install sudo
+  fi
+  
+  if ! lxc exec $container -- id seafile &>/dev/null; then
+    echo "Add 'seafile' as user"
+    lxc exec $container -- useradd -m -s /bin/bash seafile
+  fi
+
+  if ! lxc exec $container -- /bin/bash -c "sudo -l -U seafile" &>/dev/null; then
+    echo "Give 'seafile' super user privileges"
+    lxc exec $container -- /bin/bash -c "echo 'seafile ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo"
+  fi
 
   echo "Building for container: $container"
-  sudo lxc file push build.sh $container/home/seafile/
+  lxc file push build.sh $container/home/seafile/
+
+  NETWORK_ATTEMPTS=0
+  while [ "$(lxc exec ${container} -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
+    ((NETWORK_ATTEMPTS++))
+    echo -e "\e[1A\e[KNo network available in $container (attempt $NETWORK_ATTEMPTS): $(date)"
+    if [ $NETWORK_ATTEMPTS -gt 120 ]; then
+      continue 2
+    fi
+    sleep .5
+  done
+  echo -e "\e[1A\e[KNetwork available in $container"
+
+  echo "Upgrade container packages: $container"
+  lxc exec $container -- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
   echo "Execute build.sh for $container"
-  while [ "$(sudo lxc exec ${container} -- bash -c 'hostname -I' 2>/dev/null)" = "" ]; do
-      echo -e "\e[1A\e[KNo network available in $container: $(date)"
-      sleep .5
-  done
-  echo -e "\e[1A\e[KNetwork available in $container";
-  sudo lxc exec $container -- su - seafile -- ./build.sh -DTA -v $VERSION -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v${VERSION}.txt -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt
-  filename=$(sudo lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
-  sudo lxc file pull "$container$filename" ./
+  lxc exec $container -- su - seafile -c "sudo ./build.sh -DTA -v $VERSION \
+    -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v${VERSION}.txt \
+    -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v${VERSION}.txt"
+  filename=$(lxc exec $container -- bash -c "ls /home/seafile/built-seafile-server-pkgs/seafile-server-$VERSION-*.tar.gz" 2>/dev/null)
+  lxc file pull "$container$filename" ./
 
   echo -e "Build finished for container $container\n\n"
-  sudo lxc stop $container
+  lxc stop $container
 done
 
 echo "Building distros finished"
