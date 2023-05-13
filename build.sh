@@ -251,11 +251,11 @@ install_dependencies()
   # onigposix (libonig-dev) is dependency for /usr/local/include/evhtp.h
 
   msg "Downloads the package lists from the repositories and updates them"
-  (set -x; sudo apt-get update)
+  (set -x; apt-get update)
   msg "Install build-essential package"
-  (set -x; sudo apt-get install -y build-essential)
+  (set -x; apt-get install -y build-essential)
   msg "Install build dependencies"
-  (set -x; sudo apt-get install -y \
+  (set -x; apt-get install -y \
      cargo \
      cmake \
      git \
@@ -429,7 +429,7 @@ build_seafile_go_fileserver()
     cd seafile-server
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
-  (set -x; cd "${BUILDPATH}"/seafile-server/fileserver && go build .)
+  (set -x; cd fileserver && go build .)
   exitonfailure "Build seafile-server (go_fileserver) failed"
   cd "${SCRIPTPATH}"
 }
@@ -454,7 +454,7 @@ build_seafile_notification_server()
     cd seafile-server
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
-  (set -x; cd "${BUILDPATH}"/seafile-server/notification-server && go build .)
+  (set -x; cd notification-server && go build .)
   exitonfailure "Build seafile-server (notification_server) failed"
   cd "${SCRIPTPATH}"
 }

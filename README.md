@@ -11,13 +11,13 @@ E.g. to compile Seafile server v10.0.1:
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
-$ ./build.sh -DTA -v 10.0.1 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v10.0.1.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v10.0.1.txt
+$ sudo ./build.sh -DTA -v 10.0.1 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v10.0.1.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v10.0.1.txt
 ```
 
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
 
 ```shell
-seafile@rpi-focal:~$ ./build.sh
+seafile@rpi-focal:~$ sudo ./build.sh
 
 Usage:
   build.sh [OPTIONS]
@@ -84,10 +84,16 @@ If you want to build for multiple distributions and architectures via lxc contai
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-batch.sh
 $ chmod u+x build-batch.sh
-$ time bash ./build-batch.sh 10.0.1
+$ sudo time bash ./build-batch.sh 10.0.1
 ```
 
 Edit the script in order to build for your preferred distributions.
+
+If want to execute the script in the background with logs written to `build-batch.log` call:
+```shell
+sudo su
+nohup bash -c "sudo time bash ./build-batch.sh 9.0.9" >build-batch.log 2>build-batch.log < /dev/null &
+```
 
 ## Manual and Guides
 
