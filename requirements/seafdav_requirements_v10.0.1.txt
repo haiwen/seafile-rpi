@@ -1,0 +1,10 @@
+defusedxml~=0.5
+Jinja2~=2.10
+json5~=0.8.5
+python-pam~=1.8
+PyYAML~=5.1
+six~=1.13
+lxml
+sqlalchemy
+# input from @wsirhc see https://github.com/haiwen/seafile-rpi/issues/113
+markupsafe==2.0.1

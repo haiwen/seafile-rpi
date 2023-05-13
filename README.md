@@ -6,12 +6,12 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 
 ## Build
 
-E.g. to compile Seafile server v9.0.9:
+E.g. to compile Seafile server v10.0.1:
 
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
-$ sudo ./build.sh -DTA -v 9.0.9 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v9.0.9.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v9.0.9.txt
+$ sudo ./build.sh -DTA -v 10.0.1 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v10.0.1.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v10.0.1.txt
 ```
 
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
@@ -30,23 +30,24 @@ Usage:
     -2          Build/update libsearpc
     -3          Build/update seafile (c_fileserver)
     -4          Build/update seafile (go_fileserver)
-    -5          Build/update seahub
-    -6          Build/update seafobj
-    -7          Build/update seafdav
-    -8          Build/update Seafile server
+    -5          Build/update seafile (notification_server)
+    -6          Build/update seahub
+    -7          Build/update seafobj
+    -8          Build/update seafdav
+    -9          Build/update Seafile server
 
-    -A          All options -1 to -8 in one go
+    -A          All options -1 to -9 in one go
 
     -v <vers>   Set seafile server version to build
-                default: 9.0.9
+                default: 10.0.1
     -r <vers>   Set libsearpc version
                 default: 3.3-latest
     -f <vers>   Set fixed libsearpc version
                 default: 3.1.0
     -h <vers>   Set python requirement file for seahub
-                default: https://raw.githubusercontent.com/haiwen/seahub/v9.0.9-server/requirements.txt
+                default: https://raw.githubusercontent.com/haiwen/seahub/v10.0.1-server/requirements.txt
     -d <vers>   Set python requirement file for seafdav
-                default: https://raw.githubusercontent.com/haiwen/seafdav/v9.0.9-server/requirements.txt
+                default: https://raw.githubusercontent.com/haiwen/seafdav/v10.0.1-server/requirements.txt
 
     use --version for version info of this script.
 ```
@@ -59,9 +60,9 @@ seafile@rpi-focal:~$ tree . -L 3
 ├── build.sh
 ├── build-server.py.patch
 ├── built-seafile-server-pkgs
-│   └── seafile-server-9.0.9-focal-armv7l.tar.gz
+│   └── seafile-server-10.0.1-focal-armv7l.tar.gz
 ├── built-seafile-sources
-│   └── R9.0.9
+│   └── R10.0.1
 ├── go
 │   └── pkg
 ├── haiwen-build
@@ -83,7 +84,7 @@ If you want to build for multiple distributions and architectures via lxc contai
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-batch.sh
 $ chmod u+x build-batch.sh
-$ sudo time bash ./build-batch.sh 9.0.9
+$ sudo time bash ./build-batch.sh 10.0.1
 ```
 
 Edit the script in order to build for your preferred distributions.
