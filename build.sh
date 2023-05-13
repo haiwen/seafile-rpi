@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && {
-    echo "2022-11-09";
+    echo "2023-05-13";
     exit 0
 };
 
@@ -22,7 +22,7 @@ PREFIX="${HOME}/opt/local"
 
 LIBSEARPC_VERSION_LATEST="3.3-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
-VERSION="9.0.9"
+VERSION="10.0.1"
 VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)
 MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql support
 
@@ -115,7 +115,7 @@ Usage:
     ${TXT_BOLD}-8${OFF}          Build/update seafdav
     ${TXT_BOLD}-9${OFF}          Build/update Seafile server
 
-    ${TXT_BOLD}-A${OFF}          All options ${TXT_BOLD}-1${OFF} to ${TXT_BOLD}-8${OFF} in one go
+    ${TXT_BOLD}-A${OFF}          All options ${TXT_BOLD}-1${OFF} to ${TXT_BOLD}-9${OFF} in one go
 
     ${TXT_BOLD}-v${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set seafile server version to build
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${VERSION}${OFF}
@@ -652,6 +652,7 @@ build_server()
   cd "${BUILDPATH}"
   mkmissingdir "${SCRIPTPATH}/${PKGDIR}"
 
+  # TODO: remove at seafile 10.0.2 release
   msg "-> Patch build-server.py"
   echo "--- build-server.py.old	2023-04-23 17:26:19.233328609 +0200
 +++ build-server.py	2023-04-23 17:22:58.625726460 +0200
