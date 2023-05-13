@@ -36,7 +36,7 @@ Usage:
     -8          Build/update seafdav
     -9          Build/update Seafile server
 
-    -A          All options -1 to -8 in one go
+    -A          All options -1 to -9 in one go
 
     -v <vers>   Set seafile server version to build
                 default: 9.0.9
