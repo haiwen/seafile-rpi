@@ -28,8 +28,6 @@ MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql suppor
 
 VERSION_TAG="v${VERSION}-server"
 LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}"
-PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt"  # official requirements.txt file
-PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt"
 
 STEPS=0
 STEPCOUNTER=0
@@ -123,10 +121,6 @@ Usage:
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${LIBSEARPC_VERSION_LATEST}${OFF}
     ${TXT_BOLD}-f${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set fixed libsearpc version
                 ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${LIBSEARPC_VERSION_FIXED}${OFF}
-    ${TXT_BOLD}-h${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set python requirement file for seahub
-                ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${PYTHON_REQUIREMENTS_URL_SEAHUB}${OFF}
-    ${TXT_BOLD}-d${OFF} ${TXT_RED}${TXT_ITALIC}<vers>${OFF}   Set python requirement file for seafdav
-                ${TXT_LGRAY}default:${OFF} ${TXT_BLUE}${PYTHON_REQUIREMENTS_URL_SEAFDAV}${OFF}
 
     ${TXT_DGRAY}use${OFF} ${TXT_BOLD}--version${OFF} ${TXT_DGRAY}for version info of this script.${OFF}
 "
@@ -201,17 +195,11 @@ while getopts ":123456789ADTv:r:f:h:d:" OPT; do
            ;;
         v) VERSION=$OPTARG >&2
            VERSION_TAG="v${VERSION}-server" >&2
-           PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt" >&2
-           PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt" >&2
            ;;
         r) LIBSEARPC_VERSION_LATEST=$OPTARG >&2
            LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}" >&2
            ;;
         f) LIBSEARPC_VERSION_FIXED=$OPTARG >&2
-           ;;
-        h) PYTHON_REQUIREMENTS_URL_SEAHUB=$OPTARG >&2
-           ;;
-        d) PYTHON_REQUIREMENTS_URL_SEAFDAV=$OPTARG >&2
            ;;
         \?)
            error "Invalid option: ${TXT_BOLD}-$OPTARG${OFF}" >&2
@@ -284,6 +272,7 @@ install_dependencies()
      python3-ldap \
      python3-pip \
      python3-setuptools \
+     python3-venv \
      python3-wheel \
      uuid-dev \
      valac \
@@ -429,7 +418,7 @@ build_seafile_go_fileserver()
     cd seafile-server
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
-  (set -x; cd fileserver && go build .)
+  (set -x; cd fileserver && CGO_ENABLED=0 go build .)
   exitonfailure "Build seafile-server (go_fileserver) failed"
   cd "${SCRIPTPATH}"
 }
@@ -454,7 +443,7 @@ build_seafile_notification_server()
     cd seafile-server
   fi
   (set -x; git reset --hard "${VERSION_TAG}")
-  (set -x; cd notification-server && go build .)
+  (set -x; cd notification-server && CGO_ENABLED=0 go build .)
   exitonfailure "Build seafile-server (notification_server) failed"
   cd "${SCRIPTPATH}"
 }
@@ -499,22 +488,10 @@ install_thirdparty()
 
   mkmissingdir "${THIRDPARTYFOLDER}"
 
-  # get Seahub thirdparty requirements directly from GitHub
-  msg "   Get Seahub thirdparty requirements directly from GitHub"
-  (set -x; wget "$PYTHON_REQUIREMENTS_URL_SEAHUB" -O "${THIRDPARTYFOLDER}/requirements.txt")
-  exitonfailure "Unable to get Seahub requirements"
-
-  # get SeafDAV thirdparty requirements directly from Github
-  msg "   Get SeafDAV thirdparty requirements directly from GitHub"
-  (set -x; wget "$PYTHON_REQUIREMENTS_URL_SEAFDAV" -O "${THIRDPARTYFOLDER}/requirements_SeafDAV.txt")
-  exitonfailure "Unable to get Seafdav requirements"
-  # merge seahub and seafdav requirements in one file
-  (set -x; cat "${THIRDPARTYFOLDER}/requirements_SeafDAV.txt" >> "${THIRDPARTYFOLDER}/requirements.txt")
-
   # install Seahub and SeafDAV thirdparty requirements
   # on pip=20.* DEPRECATION: --install-option: ['--install-lib', '--install-scripts']
   msg "   Install Seahub and SeafDAV thirdparty requirements"
-  (set -x; python3 -m pip install -r "${THIRDPARTYFOLDER}/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
+  (set -x; python3 -m pip install -r "requirements/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade --no-deps)
   exitonfailure "Thirdparty requirements installation failed"
 
   # clean up

@@ -14,3 +14,6 @@ seafile-server-pkgs/
 
 # VSCode
 .vscode
+
+# dotenv
+.env

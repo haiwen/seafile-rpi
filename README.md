@@ -9,9 +9,9 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 E.g. to compile Seafile server v10.0.1:
 
 ```shell
-$ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
+$ git clone --depth=1 https://github.com/haiwen/seafile-rpi.git && cd seafile-rpi
 $ chmod u+x build.sh
-$ sudo ./build.sh -DTA -v 10.0.1 -h https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seahub_requirements_v10.0.1.txt -d https://github.com/haiwen/seafile-rpi/blob/feat/master/requirements/seafdav_requirements_v10.0.1.txt
+$ sudo ./build.sh -DTA -v 10.0.1
 ```
 
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
@@ -44,10 +44,6 @@ Usage:
                 default: 3.3-latest
     -f <vers>   Set fixed libsearpc version
                 default: 3.1.0
-    -h <vers>   Set python requirement file for seahub
-                default: https://raw.githubusercontent.com/haiwen/seahub/v10.0.1-server/requirements.txt
-    -d <vers>   Set python requirement file for seafdav
-                default: https://raw.githubusercontent.com/haiwen/seafdav/v10.0.1-server/requirements.txt
 
     use --version for version info of this script.
 ```
@@ -77,22 +73,95 @@ seafile@rpi-focal:~$ tree . -L 3
     └── local
 ```
 
-## Batch Build
+## Docker build
 
-If you want to build for multiple distributions and architectures via lxc containers you can run:
+This section describes cross-compilation using Docker buildx.
 
-```shell
-$ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build-batch.sh
-$ chmod u+x build-batch.sh
-$ sudo time bash ./build-batch.sh 10.0.1
+### Builder image creation
+
+Copy the `.env.example` to `.env` and choose which image to build, for which platforms and to which place to push it. 
+
+Then use the `build_image.sh` script to build it, for example to build an image tagged *jammy* and push it to the registry:
+
+```bash
+./build_image.sh -t jammy -p
 ```
 
-Edit the script in order to build for your preferred distributions.
+Script reference:
 
-If want to execute the script in the background with logs written to `build-batch.log` call:
-```shell
-sudo su
-nohup bash -c "sudo time bash ./build-batch.sh 9.0.9" >build-batch.log 2>build-batch.log < /dev/null &
+```
+build_image.sh [OPTIONS]
+
+Command line arguments take precedence over settings defined in the .env file
+
+Options:
+    -f <path>       Set the Dockerfile to use
+    -D <path>       Build directory (default: current directory)
+    -P <platforms>  List of platforms to build, comma separated. Incompatible with -l. Example:
+                      linux/arm64,linux/arm/v7
+                    
+    -r <registry>   Registry to which upload the image. Empty for Docker Hub. Need to be set before -t.
+    -u <repo>       Repository to which upload the image. Need to be set before -t.
+    -i <name>       Image name. Need to be set before -t.
+    -t <tag>        Add a tag. Can be used several times
+
+    -l <platform>   Load to the local images. One <platform> at time only.
+                    <platform> working choices can be: 
+                        arm/v7 
+                        arm64 
+                        amd64
+    -p              Push the image(s) to the remote registry. Incompatible with -l.
+```
+
+### Build
+
+Again, use the `.env` to set your parametets, i.e. Seafile version and builder image. The use the `build_with_docker.sh` script to build packages. Basically just a wrapper over `build.sh` for cross-compilation. You'll need one or more working builder images (see above).
+
+What you *want* is probably just building in one pass:
+
+```bash
+$ ./build_with_docker.sh -TA
+```
+
+Package will be stored in the `build/<platform>/built-seafile-server-pkgs` folder.
+
+But things can become a little more tricky. Golang parts (fileserver & notification server) typically won't build with an image based on a distribution older than Ubuntu 22.04 (jammy). Since go binaries are statically linked, you can use two builders to achieve your goal:
+
+```bash
+$ ./build_with_docker.sh -B localhost:5000/seafile/builder:jammy  -45
+$ ./build_with_docker.sh -B localhost:5000/seafile/builder:buster -T1236789
+```
+
+Script reference:
+
+```
+build_with_docker.sh [OPTIONS]
+
+Command line arguments take precedence over settings defined in the .env file
+
+Options:
+    -B <image>  Builder image to use       
+
+    -T          Install thirdparty requirements
+
+    -1          Build/update libevhtp
+    -2          Build/update libsearpc
+    -3          Build/update seafile (c_fileserver)
+    -4          Build/update seafile (go_fileserver)
+    -5          Build/update seafile (notification_server)
+    -6          Build/update seahub
+    -7          Build/update seafobj
+    -8          Build/update seafdav
+    -9          Build/update Seafile server
+
+    -A          All options -1 to -9 in one go
+
+    -v <vers>   Set seafile server version to build
+                default: 10.0.1
+    -r <vers>   Set libsearpc version
+                default: 3.3-latest
+    -f <vers>   Set fixed libsearpc version
+                default: 3.1.0
 ```
 
 ## Manual and Guides
