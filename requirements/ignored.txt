@@ -1,0 +1,12 @@
+cffi
+charset-normalizer
+cryptography
+greenlet
+lxml
+MarkupSafe
+mysqlclient
+Pillow
+pkg_resources
+pylibmc
+PyYAML
+SQLAlchemy
