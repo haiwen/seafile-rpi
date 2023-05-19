@@ -1,0 +1,18 @@
+name: BuildAndDeployTest
+on: workflow_dispatch
+
+jobs:
+  buildAndDeployTest:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+           apt-get install docker -y
+           cp .env.example .env
+           chmod 755 ./build.sh
+           chmod 755 ./build-docker.sh
+           chmod 755 ./build-image.sh
+           ./build-image.sh -t jammy -p
