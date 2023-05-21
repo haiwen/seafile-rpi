@@ -1,18 +1,160 @@
-name: Build
+name: BuildServerPackages
 on: workflow_dispatch
 
 jobs:
-  buildAndDeployTest:
+  BuildBuster:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      - name: Build
+      - name: PrepareHost
         run: |
-           apt-get install docker -y
-           cp .env.example .env
-           chmod 755 ./build.sh
-           chmod 755 ./build-docker.sh
-           chmod 755 ./build-image.sh
-           ./build-image.sh -t jammy -p
+           ./githubActionsBuild/prepareHost.sh
+
+      - name: BuildPackageArm64
+        run: |
+           ./githubActionsBuild/createBuildImage.sh buster arm64 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh buster arm64
+
+      - name: BuildPackageArmv7
+        run: |
+           ./githubActionsBuild/createBuildImage.sh buster arm/v7 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh buster arm/v7
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BusterServerPackage
+          path: |
+            build/**/built-seafile-server-pkgs/*.tar.gz
+
+  BuildBullseye:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - name: BuildPackageArm64
+        run: |
+           ./githubActionsBuild/createBuildImage.sh bullseye arm64 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bullseye arm64
+
+      - name: BuildPackageArmv7
+        run: |
+           ./githubActionsBuild/createBuildImage.sh bullseye arm/v7 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bullseye arm/v7
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BullseyeServerPackage
+          path: |
+            build/**/built-seafile-server-pkgs/*.tar.gz
+
+  BuildBookworm:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - name: BuildPackageArm64
+        run: |
+           ./githubActionsBuild/createBuildImage.sh bookworm arm64 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bookworm arm64
+
+      - name: BuildPackageArmv7
+        run: |
+           ./githubActionsBuild/createBuildImage.sh bookworm arm/v7 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bookworm arm/v7
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BookwormServerPackage
+          path: |
+            build/**/built-seafile-server-pkgs/*.tar.gz
+
+  BuildBionic:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - name: BuildPackageArm64
+        run: |
+           ./githubActionsBuild/createBuildImage.sh bionic arm64 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bionic arm64
+
+      - name: BuildPackageArmv7
+        run: |
+           ./githubActionsBuild/createBuildImage.sh bionic arm/v7 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bionic arm/v7
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BionicServerPackage
+          path: |
+            build/**/built-seafile-server-pkgs/*.tar.gz
+
+  BuildFocal:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - name: BuildPackageArm64
+        run: |
+           ./githubActionsBuild/createBuildImage.sh focal arm64 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh focal arm64
+
+      - name: BuildPackageArmv7
+        run: |
+           ./githubActionsBuild/createBuildImage.sh focal arm/v7 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh focal arm/v7
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: FocalServerPackage
+          path: |
+            build/**/built-seafile-server-pkgs/*.tar.gz
+
+  BuildJammy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - name: BuildPackageArm64
+        run: |
+           ./githubActionsBuild/createBuildImage.sh jammy arm64 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh jammy arm64
+
+      - name: BuildPackageArmv7
+        run: |
+           ./githubActionsBuild/createBuildImage.sh jammy arm/v7 go1.20.4.linux-arm64.tar.gz
+           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh jammy arm/v7
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: JammyServerPackage
+          path: |
+            build/**/built-seafile-server-pkgs/*.tar.gz
+
