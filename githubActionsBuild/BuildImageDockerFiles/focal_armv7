@@ -6,8 +6,9 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
     tzdata \
     wget
 
+RUN ls -lisa /etc/ssl/certs
 ARG GOVERSION
-RUN wget -v --debug https://go.dev/dl/$GOVERSION
+RUN sudo wget -v --debug https://go.dev/dl/$GOVERSION
 RUN tar -xzf $GOVERSION
 RUN mv go /usr/local
 RUN ln -s /usr/local/go/bin/go /usr/bin/go
