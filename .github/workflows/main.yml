@@ -26,7 +26,7 @@ jobs:
         with:
           name: BusterServerPackage
           path: |
-            out/**/built-seafile-server-pkgs/*.tar.gz
+            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
   BuildBullseye:
     runs-on: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
         with:
           name: BullseyeServerPackage
           path: |
-            out/**/built-seafile-server-pkgs/*.tar.gz
+            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
   BuildBookworm:
     runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
         with:
           name: BookwormServerPackage
           path: |
-            out/**/built-seafile-server-pkgs/*.tar.gz
+            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
 #  BuildBionic:
 #    runs-on: ubuntu-latest
@@ -104,7 +104,7 @@ jobs:
 #        with:
 #          name: BionicServerPackage
 #          path: |
-#            out/**/built-seafile-server-pkgs/*.tar.gz
+#            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
   BuildFocal:
     runs-on: ubuntu-latest
@@ -130,7 +130,7 @@ jobs:
         with:
           name: FocalServerPackage
           path: |
-            out/**/built-seafile-server-pkgs/*.tar.gz
+            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
   BuildJammy:
     runs-on: ubuntu-latest
@@ -156,5 +156,5 @@ jobs:
         with:
           name: JammyServerPackage
           path: |
-            out/**/built-seafile-server-pkgs/*.tar.gz
+            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
