@@ -1,4 +1,4 @@
-FROM --platform=linux/arm/v7 ubuntu:focal
+FROM --platform=linux/arm/v7 ubuntu:focal-20230126
 
 
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
