@@ -4,14 +4,11 @@ RUN apt-get update -y && apt-get dist-upgrade -y
 
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
     tzdata \
+    strace \
     wget
 
-RUN ls -lisa /etc/ssl/certs
-RUN ls -lisa /usr/share/ca-certificates/mozilla
-RUN whoami
-RUN ln -s /etc/ssl /usr/ssl
 ARG GOVERSION
-RUN wget -v --debug --ca-directory=/etc/ssl/certs https://go.dev/dl/$GOVERSION
+RUN strace wget https://go.dev/dl/$GOVERSION
 RUN tar -xzf $GOVERSION
 RUN mv go /usr/local
 RUN ln -s /usr/local/go/bin/go /usr/bin/go
