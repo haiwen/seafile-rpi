@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
     tzdata \
     wget
 
-RUN  echo | openssl s_client -connect go.dev:443
+RUN  echo | openssl s_client -connect go.dev:443 -showcerts
 ARG GOVERSION
 RUN strace wget https://go.dev/dl/$GOVERSION
 RUN tar -xzf $GOVERSION
