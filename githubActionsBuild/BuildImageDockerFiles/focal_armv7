@@ -40,7 +40,7 @@ RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get insta
     wget
 
 ARG GOVERSION
-RUN wget https://go.dev/dl/$GOVERSION
+RUN wget --no-check-certificate https://go.dev/dl/$GOVERSION
 RUN tar -xzf $GOVERSION
 RUN mv go /usr/local
 RUN ln -s /usr/local/go/bin/go /usr/bin/go
