@@ -1,5 +1,16 @@
 FROM --platform=linux/arm/v7 ubuntu:focal
 
+RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
+    tzdata \
+    wget
+
+RUN date
+
+ARG GOVERSION
+RUN wget --no-check-certificate https://go.dev/dl/$GOVERSION
+RUN tar -xzf $GOVERSION
+RUN mv go /usr/local
+RUN ln -s /usr/local/go/bin/go /usr/bin/go
 
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
     tzdata \
@@ -38,13 +49,3 @@ RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get insta
     uuid-dev \
     valac \
     wget
-
-RUN ls -lisa /usr/share/keyrings/
-RUN apt reinstall ca-certificates -y
-RUN ls -lisa /usr/share/keyrings/
-
-ARG GOVERSION
-RUN wget --no-check-certificate https://go.dev/dl/$GOVERSION
-RUN tar -xzf $GOVERSION
-RUN mv go /usr/local
-RUN ln -s /usr/local/go/bin/go /usr/bin/go
