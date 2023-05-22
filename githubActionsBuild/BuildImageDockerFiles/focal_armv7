@@ -11,7 +11,7 @@ RUN ls -lisa /usr/share/ca-certificates/mozilla
 RUN whoami
 RUN ln -s /etc/ssl /usr/ssl
 ARG GOVERSION
-RUN wget -v --debug https://go.dev/dl/$GOVERSION
+RUN wget -v --debug --ca-directory=/etc/ssl/certs https://go.dev/dl/$GOVERSION
 RUN tar -xzf $GOVERSION
 RUN mv go /usr/local
 RUN ln -s /usr/local/go/bin/go /usr/bin/go
