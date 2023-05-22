@@ -4,9 +4,9 @@ RUN apt-get update -y && apt-get dist-upgrade -y
 
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
     tzdata \
-    strace \
     wget
 
+RUN  echo | openssl s_client -connect go.dev:443
 ARG GOVERSION
 RUN strace wget https://go.dev/dl/$GOVERSION
 RUN tar -xzf $GOVERSION
