@@ -1,6 +1,8 @@
 #!/bin/bash
 
 VERSION="10.0.1"
+PATH=~/.cargo/bin:$PATH
+cargo -V
 LIBSEARPC_VERSION_LATEST="3.3-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
 

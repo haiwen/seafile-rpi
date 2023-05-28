@@ -19,3 +19,10 @@ docker run --rm \
     -v "./runTest_${USESCRIPT}.sh":/runTest.sh \
     -v "$PACKAGE_DIR":/PACKAGE_DIR \
     seafile-testing:${1} /bin/bash -c "$cmd"
+
+#docker run -it --rm \
+#    --platform linux/${2} \
+#    --pull missing \
+#    -v "./runTest_${USESCRIPT}.sh":/runTest.sh \
+#    -v "$PACKAGE_DIR":/PACKAGE_DIR \
+#    seafile-testing:${1} /bin/bash
