@@ -23,6 +23,25 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
+  TestBusterArm64:
+    needs: BuildBusterArm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+          path: githubActionsBuild/in
+
+      - name: Unzipping
+        run: unzip *.zip
+        working-directory: githubActionsBuild/in
+
+      - name: TestingPackageArm64
+        run: |
+           ./githubActionsBuild/createTestingImage.sh buster arm64
+           ./githubActionsBuild/startServerPackageTest.sh buster arm64
+
   BuildBusterArmv7:
     runs-on: ubuntu-latest
     steps:

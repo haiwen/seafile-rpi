@@ -152,7 +152,7 @@ msg "   PYTHONPATH = $PYTHONPATH${OFF}"
 msg "   export THIRDPARTYFOLDER/django/bin to PATH"
 export PATH="${THIRDPARTYFOLDER}/django/bin:${PATH}"
 msg "   PATH = ${PATH}"
-(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade --no-deps)
+(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
 # generate package
 # if python != python3.6 we need to "sudo ln -s /usr/bin/python3.6 /usr/bin/python" or with "pyenv global 3.6.9"
 (set -x; python3 "${BUILDPATH}/seahub/tools/gen-tarball.py" --version="${VERSION_SEAFILE}" --branch=HEAD)
@@ -171,6 +171,8 @@ cd "${BUILDPATH}"
 (set -x; git clone "https://github.com/haiwen/seafdav.git")
 cd seafdav
 (set -x; git reset --hard "${VERSION_TAG}")
+#also adding requirements file from seahub to avoid removal of bin dir contents
+(set -x; python3 -m pip install -r "${BUILDPATH}/seafdav/requirements.txt" -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
 (set -x; make)
 exitonfailure "Build seafdav failed"
 
