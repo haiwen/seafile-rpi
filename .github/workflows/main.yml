@@ -28,6 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
       - uses: actions/download-artifact@v3
         with:
           name: BusterServerPackageArm64
