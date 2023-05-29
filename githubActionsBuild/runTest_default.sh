@@ -6,6 +6,21 @@ PACKAGE=$(find /PACKAGE_DIR -type f -iname "*.tar.gz")
 echo -e "Using server package: $PACKAGE\n"
 
 apt-get update && apt-get install python3 sqlite3 net-tools procps wget -y
+if [[ "$PACKAGE" =~ buster ]]; then
+    apt-get install libjpeg62-turbo -y
+fi
+if [[ "$PACKAGE" =~ bullseye ]]; then
+    apt-get install libjpeg62-turbo -y
+fi
+if [[ "$PACKAGE" =~ bookworm ]]; then
+    apt-get install libjpeg62-turbo -y
+fi
+if [[ "$PACKAGE" =~ focal ]]; then
+    apt-get install libjpeg8 -y
+fi
+if [[ "$PACKAGE" =~ jammy ]]; then
+    apt-get install libjpeg8 -y
+fi
 cd /opt
 tar -xzf $PACKAGE
 cd /opt/$(ls -1 /opt)
@@ -45,6 +60,12 @@ rm -rf /opt/*
 
 
 apt-get install mariadb-server python3-pip -y
+if [[ "$PACKAGE" =~ focal ]]; then
+    apt-get install libmariadb3 -y
+fi
+if [[ "$PACKAGE" =~ jammy ]]; then
+    apt-get install libmariadb3 -y
+fi
 service mariadb start
 service mysql start
 sleep 1
@@ -56,7 +77,11 @@ if [ $? -ne 0 ]; then
 fi
 mysqladmin -u root password test
 
-python3 -m pip install pymysql
+if [[ "$PACKAGE" =~ bookworm ]]; then
+    python3 -m pip install pymysql --break-system-packages
+else
+    python3 -m pip install pymysql
+fi
 tar -xzf $PACKAGE
 cd /opt/$(ls -1 /opt)
 

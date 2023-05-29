@@ -100,9 +100,32 @@ export PKG_CONFIG_PATH="${BUILDPATH}/libsearpc:${PKG_CONFIG_PATH}"
 export PKG_CONFIG_PATH="${BUILDPATH}/seafile-server/lib:${PKG_CONFIG_PATH}"
 msg "   PKG_CONFIG_PATH = ${PKG_CONFIG_PATH} "
 
-msg "-> [] Build libevhtp"
+msg "-> [] getting all git repos first"
 cd "${BUILDPATH}"
 (set -x; git clone "https://www.github.com/haiwen/libevhtp.git")
+cd "${BUILDPATH}"
+(set -x; git clone "https://github.com/haiwen/libsearpc.git")
+cd libsearpc
+(set -x; git reset --hard "${LIBSEARPC_TAG}")
+cd "${BUILDPATH}"
+(set -x; git clone "https://github.com/haiwen/seahub.git")
+cd seahub
+(set -x; git reset --hard "${VERSION_TAG}")
+cd "${BUILDPATH}"
+(set -x; git clone "https://github.com/haiwen/seafile-server.git")
+cd seafile-server
+(set -x; git reset --hard "${VERSION_TAG}")
+cd "${BUILDPATH}"
+(set -x; git clone "https://github.com/haiwen/seafobj.git")
+cd seafobj
+(set -x; git reset --hard "${VERSION_TAG}")
+cd "${BUILDPATH}"
+(set -x; git clone "https://github.com/haiwen/seafdav.git")
+cd seafdav
+(set -x; git reset --hard "${VERSION_TAG}")
+
+msg "-> [] Build libevhtp"
+cd "${BUILDPATH}"
 cd libevhtp
 (set -x; cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DEVHTP_DISABLE_SSL=ON -DEVHTP_BUILD_SHARED=OFF .)
 (set -x; make)
@@ -111,9 +134,7 @@ exitonfailure "Build libevhtp failed"
 
 msg "-> [] Build libsearpc"
 cd "${BUILDPATH}"
-(set -x; git clone "https://github.com/haiwen/libsearpc.git")
 cd libsearpc
-(set -x; git reset --hard "${LIBSEARPC_TAG}")
 (set -x; ./autogen.sh)
 (set -x; ./configure)
 (set -x; make dist)
@@ -121,9 +142,7 @@ exitonfailure "Build libsearpc failed"
 
 msg "-> [] Build seahub"
 cd "${BUILDPATH}"
-(set -x; git clone "https://github.com/haiwen/seahub.git")
 cd seahub
-(set -x; git reset --hard "${VERSION_TAG}")
 msg "   Export THIRDPARTYFOLDER to PATH"
 export PATH="${THIRDPARTYFOLDER}:${PATH}"
 msg "   PATH = ${PATH}"
@@ -134,8 +153,8 @@ msg "   PYTHONPATH = $PYTHONPATH${OFF}"
 msg "   export THIRDPARTYFOLDER/django/bin to PATH"
 export PATH="${THIRDPARTYFOLDER}/django/bin:${PATH}"
 msg "   PATH = ${PATH}"
-#echo -e "\ncryptography~=38.0.0\n" >> ${BUILDPATH}/seahub/requirements.txt
-(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
+#we do this for seafdav and seahub here once
+(set -x; python3 -m pip install -r "${BUILDPATH}/seafdav/requirements.txt" -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
 # generate package
 # if python != python3.6 we need to "sudo ln -s /usr/bin/python3.6 /usr/bin/python" or with "pyenv global 3.6.9"
 (set -x; python3 "${BUILDPATH}/seahub/tools/gen-tarball.py" --version="${VERSION_SEAFILE}" --branch=HEAD)
@@ -143,9 +162,7 @@ exitonfailure "Build seahub failed"
 
 msg "-> [] Build seafile-server (c_fileserver)"
 cd "${BUILDPATH}"
-(set -x; git clone "https://github.com/haiwen/seafile-server.git")
 cd seafile-server
-(set -x; git reset --hard "${VERSION_TAG}")
 (set -x; ./autogen.sh)
 (set -x; ./configure --with-mysql=${MYSQL_CONFIG_PATH} --enable-ldap)
 (set -x; make dist)
@@ -171,19 +188,14 @@ fi
 
 msg "-> [] Build seafobj"
 cd "${BUILDPATH}"
-(set -x; git clone "https://github.com/haiwen/seafobj.git")
 cd seafobj
-(set -x; git reset --hard "${VERSION_TAG}")
 (set -x; make dist)
 exitonfailure "Build seafobj failed"
 
 msg "-> [] Build seafdav"
 cd "${BUILDPATH}"
-(set -x; git clone "https://github.com/haiwen/seafdav.git")
 cd seafdav
-(set -x; git reset --hard "${VERSION_TAG}")
 #also adding requirements file from seahub to avoid removal of bin dir contents
-(set -x; python3 -m pip install -r "${BUILDPATH}/seafdav/requirements.txt" -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
 (set -x; make)
 exitonfailure "Build seafdav failed"
 
