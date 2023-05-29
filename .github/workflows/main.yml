@@ -23,29 +23,6 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
-  TestBusterArm64:
-    needs: BuildBusterArm64
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: PrepareHost
-        run: |
-           ./githubActionsBuild/prepareHost.sh
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: BusterServerPackageArm64
-          path: githubActionsBuild/in
-
-      - name: Unzipping
-        run: unzip *.zip
-        working-directory: githubActionsBuild/in
-
-      - name: TestingPackageArm64
-        run: |
-           ./githubActionsBuild/createTestingImage.sh buster arm64
-           ./githubActionsBuild/startServerPackageTest.sh buster arm64
-
   BuildBusterArmv7:
     runs-on: ubuntu-latest
     steps:
@@ -88,6 +65,29 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
+  TestBullseyeArm64:
+    needs: BuildBullseyeArm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: BullseyeServerPackageArm64
+          path: githubActionsBuild/in
+
+      - name: Unzipping
+        run: unzip *.zip
+        working-directory: githubActionsBuild/in
+
+      - name: TestingPackageArm64
+        run: |
+           ./githubActionsBuild/createTestingImage.sh bullseye arm64
+           ./githubActionsBuild/startServerPackageTest.sh bullseye arm64
+
   BuildBullseyeArmv7:
     runs-on: ubuntu-latest
     steps:
@@ -108,6 +108,29 @@ jobs:
           name: BullseyeServerPackageArmv7
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+
+  TestBullseyeArmv7:
+    needs: BuildBullseyeArmv7
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: BullseyeServerPackageArmv7
+          path: githubActionsBuild/in
+
+      - name: Unzipping
+        run: unzip *.zip
+        working-directory: githubActionsBuild/in
+
+      - name: TestingPackageArmv7
+        run: |
+           ./githubActionsBuild/createTestingImage.sh bullseye arm/v7
+           ./githubActionsBuild/startServerPackageTest.sh bullseye arm/v7
 
   BuildBookwormArm64:
     runs-on: ubuntu-latest
