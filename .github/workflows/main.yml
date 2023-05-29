@@ -23,6 +23,25 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
+  TestBusterArm64:
+    needs: BuildBusterArm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: BusterServerPackageArm64
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArm64
+        run: |
+           ./githubActionsBuild/createTestingImage.sh buster arm64
+           ./githubActionsBuild/startServerPackageTest.sh buster arm64
+
   BuildBusterArmv7:
     runs-on: ubuntu-latest
     steps:
@@ -43,6 +62,25 @@ jobs:
           name: BusterServerPackageArmv7
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+
+  TestBusterArmv7:
+    needs: BuildBusterArmv7
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: BusterServerPackageArmv7
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArmv7
+        run: |
+           ./githubActionsBuild/createTestingImage.sh buster arm/v7
+           ./githubActionsBuild/startServerPackageTest.sh buster arm/v7
 
   BuildBullseyeArm64:
     runs-on: ubuntu-latest
@@ -78,10 +116,6 @@ jobs:
         with:
           name: BullseyeServerPackageArm64
           path: githubActionsBuild/in
-
-      - name: Listing
-        run: find
-        working-directory: githubActionsBuild/in
 
       - name: TestingPackageArm64
         run: |
@@ -123,10 +157,6 @@ jobs:
           name: BullseyeServerPackageArmv7
           path: githubActionsBuild/in
 
-      - name: Listing
-        run: find
-        working-directory: githubActionsBuild/in
-
       - name: TestingPackageArmv7
         run: |
            ./githubActionsBuild/createTestingImage.sh bullseye arm/v7
@@ -153,6 +183,25 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
+  TestBookwormArm64:
+    needs: BuildBookwormArm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: BookwormServerPackageArm64
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArm64
+        run: |
+           ./githubActionsBuild/createTestingImage.sh bookworm arm64
+           ./githubActionsBuild/startServerPackageTest.sh bookworm arm64
+
   BuildBookwormArmv7:
     runs-on: ubuntu-latest
     steps:
@@ -173,6 +222,25 @@ jobs:
           name: BookwormServerPackageArmv7
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+
+  TestBookwormArmv7:
+    needs: BuildBookwormArmv7
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: BookwormServerPackageArmv7
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArmv7
+        run: |
+           ./githubActionsBuild/createTestingImage.sh bookworm arm/v7
+           ./githubActionsBuild/startServerPackageTest.sh bookworm arm/v7
 
   BuildFocalArm64:
     runs-on: ubuntu-latest
@@ -195,6 +263,25 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
+  TestFocalArm64:
+    needs: BuildFocalArm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: FocalServerPackageArm64
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArm64
+        run: |
+           ./githubActionsBuild/createTestingImage.sh focal arm64
+           ./githubActionsBuild/startServerPackageTest.sh focal arm64
+
   BuildFocalArmv7:
     runs-on: ubuntu-latest
     steps:
@@ -215,6 +302,25 @@ jobs:
           name: FocalServerPackageArmv7
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+
+  TestFocalArmv7:
+    needs: BuildFocalArmv7
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: FocalServerPackageArmv7
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArmv7
+        run: |
+           ./githubActionsBuild/createTestingImage.sh focal arm/v7
+           ./githubActionsBuild/startServerPackageTest.sh focal arm/v7
 
   BuildJammyArm64:
     runs-on: ubuntu-latest
@@ -237,6 +343,25 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
+  TestJammyArm64:
+    needs: BuildJammyArm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: JammyServerPackageArm64
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArm64
+        run: |
+           ./githubActionsBuild/createTestingImage.sh jammy arm64
+           ./githubActionsBuild/startServerPackageTest.sh jammy arm64
+
   BuildJammyArmv7:
     runs-on: ubuntu-latest
     steps:
@@ -258,3 +383,21 @@ jobs:
           path: |
             githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
 
+  TestJammyArmv7:
+    needs: BuildJammyArmv7
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: PrepareHost
+        run: |
+           ./githubActionsBuild/prepareHost.sh
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: JammyServerPackageArmv7
+          path: githubActionsBuild/in
+
+      - name: TestingPackageArmv7
+        run: |
+           ./githubActionsBuild/createTestingImage.sh jammy arm/v7
+           ./githubActionsBuild/startServerPackageTest.sh jammy arm/v7
