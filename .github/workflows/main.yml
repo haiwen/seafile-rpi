@@ -79,8 +79,8 @@ jobs:
           name: BullseyeServerPackageArm64
           path: githubActionsBuild/in
 
-      - name: Unzipping
-        run: unzip *.zip
+      - name: Listing
+        run: find
         working-directory: githubActionsBuild/in
 
       - name: TestingPackageArm64
@@ -123,8 +123,8 @@ jobs:
           name: BullseyeServerPackageArmv7
           path: githubActionsBuild/in
 
-      - name: Unzipping
-        run: unzip *.zip
+      - name: Listing
+        run: find
         working-directory: githubActionsBuild/in
 
       - name: TestingPackageArmv7

@@ -1,10 +1,6 @@
 # output folders
-build/
-seafile-sources/
-seafile-server-pkgs/
-
-# build artefacts
-.build.sh.swp
+githubActionsBuild/in
+githubActionsBuild/out
 
 # MacOS
 .DS_Store

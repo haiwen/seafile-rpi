@@ -88,6 +88,10 @@ export CPATH="${PREFIX}/include"
 msg "   LIBRARY_PATH = ${LIBRARY_PATH} "
 msg "   LD_LIBRARY_PATH = ${LD_LIBRARY_PATH} "
 msg "   CPATH = ${CPATH} "
+#apt-get install python3-venv -y
+#(set -x;python3 -m venv venv)
+#source venv/bin/activate
+(set -x; python3 -m pip install -U setuptools wheel pip)
 
 msg "-> [] Prepare libs"
 # Export PKG_CONFIG_PATH for seafile-server and libsearpc

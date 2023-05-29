@@ -88,6 +88,10 @@ export CPATH="${PREFIX}/include"
 msg "   LIBRARY_PATH = ${LIBRARY_PATH} "
 msg "   LD_LIBRARY_PATH = ${LD_LIBRARY_PATH} "
 msg "   CPATH = ${CPATH} "
+#apt-get install python3-venv -y
+#(set -x;python3 -m venv venv)
+#source venv/bin/activate
+(set -x; python3 -m pip install -U setuptools wheel pip)
 
 msg "-> [] Prepare libs"
 # Export PKG_CONFIG_PATH for seafile-server and libsearpc
@@ -131,7 +135,7 @@ msg "   export THIRDPARTYFOLDER/django/bin to PATH"
 export PATH="${THIRDPARTYFOLDER}/django/bin:${PATH}"
 msg "   PATH = ${PATH}"
 #echo -e "\ncryptography~=38.0.0\n" >> ${BUILDPATH}/seahub/requirements.txt
-(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
+(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade --no-use-pep517)
 # generate package
 # if python != python3.6 we need to "sudo ln -s /usr/bin/python3.6 /usr/bin/python" or with "pyenv global 3.6.9"
 (set -x; python3 "${BUILDPATH}/seahub/tools/gen-tarball.py" --version="${VERSION_SEAFILE}" --branch=HEAD)
