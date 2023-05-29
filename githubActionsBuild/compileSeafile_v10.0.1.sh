@@ -135,7 +135,7 @@ msg "   export THIRDPARTYFOLDER/django/bin to PATH"
 export PATH="${THIRDPARTYFOLDER}/django/bin:${PATH}"
 msg "   PATH = ${PATH}"
 #echo -e "\ncryptography~=38.0.0\n" >> ${BUILDPATH}/seahub/requirements.txt
-(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade --no-use-pep517)
+(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
 # generate package
 # if python != python3.6 we need to "sudo ln -s /usr/bin/python3.6 /usr/bin/python" or with "pyenv global 3.6.9"
 (set -x; python3 "${BUILDPATH}/seahub/tools/gen-tarball.py" --version="${VERSION_SEAFILE}" --branch=HEAD)
