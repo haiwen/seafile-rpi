@@ -36,8 +36,7 @@ RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get insta
     python3-setuptools \
     python3-wheel \
     uuid-dev \
-    valac \
-    wget
+    valac
 
 ARG GOVERSION
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rust_install.sh;chmod 755 /tmp/rust_install.sh;/tmp/rust_install.sh -y

@@ -16,6 +16,7 @@ fi
 
 docker run --rm \
     --platform linux/${2} \
+    -m 6192M \
     --pull missing \
     -v "./compileSeafile_${USESCRIPT}.sh":/compileSeafile.sh \
     -v "$OUTPUT_DIR/${2}/built-seafile-server-pkgs":/built-seafile-server-pkgs \

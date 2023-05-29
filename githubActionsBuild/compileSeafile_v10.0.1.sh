@@ -115,6 +115,28 @@ cd libsearpc
 (set -x; make dist)
 exitonfailure "Build libsearpc failed"
 
+msg "-> [] Build seahub"
+cd "${BUILDPATH}"
+(set -x; git clone "https://github.com/haiwen/seahub.git")
+cd seahub
+(set -x; git reset --hard "${VERSION_TAG}")
+msg "   Export THIRDPARTYFOLDER to PATH"
+export PATH="${THIRDPARTYFOLDER}:${PATH}"
+msg "   PATH = ${PATH}"
+msg "   Export THIRDPARTYFOLDER to PYTHONPATH"
+export PYTHONPATH="${THIRDPARTYFOLDER}"
+msg "   PYTHONPATH = $PYTHONPATH${OFF}"
+# to fix [ERROR] django-admin scripts not found in PATH
+msg "   export THIRDPARTYFOLDER/django/bin to PATH"
+export PATH="${THIRDPARTYFOLDER}/django/bin:${PATH}"
+msg "   PATH = ${PATH}"
+#echo -e "\ncryptography~=38.0.0\n" >> ${BUILDPATH}/seahub/requirements.txt
+(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
+# generate package
+# if python != python3.6 we need to "sudo ln -s /usr/bin/python3.6 /usr/bin/python" or with "pyenv global 3.6.9"
+(set -x; python3 "${BUILDPATH}/seahub/tools/gen-tarball.py" --version="${VERSION_SEAFILE}" --branch=HEAD)
+exitonfailure "Build seahub failed"
+
 msg "-> [] Build seafile-server (c_fileserver)"
 cd "${BUILDPATH}"
 (set -x; git clone "https://github.com/haiwen/seafile-server.git")
@@ -138,27 +160,6 @@ cd seafile-server
 (set -x; git reset --hard "${VERSION_TAG}")
 (set -x; cd notification-server && CGO_ENABLED=0 go build .)
 exitonfailure "Build seafile-server (notification_server) failed"
-
-msg "-> [] Build seahub"
-cd "${BUILDPATH}"
-(set -x; git clone "https://github.com/haiwen/seahub.git")
-cd seahub
-(set -x; git reset --hard "${VERSION_TAG}")
-msg "   Export THIRDPARTYFOLDER to PATH"
-export PATH="${THIRDPARTYFOLDER}:${PATH}"
-msg "   PATH = ${PATH}"
-msg "   Export THIRDPARTYFOLDER to PYTHONPATH"
-export PYTHONPATH="${THIRDPARTYFOLDER}"
-msg "   PYTHONPATH = $PYTHONPATH${OFF}"
-# to fix [ERROR] django-admin scripts not found in PATH
-msg "   export THIRDPARTYFOLDER/django/bin to PATH"
-export PATH="${THIRDPARTYFOLDER}/django/bin:${PATH}"
-msg "   PATH = ${PATH}"
-(set -x; python3 -m pip install -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
-# generate package
-# if python != python3.6 we need to "sudo ln -s /usr/bin/python3.6 /usr/bin/python" or with "pyenv global 3.6.9"
-(set -x; python3 "${BUILDPATH}/seahub/tools/gen-tarball.py" --version="${VERSION_SEAFILE}" --branch=HEAD)
-exitonfailure "Build seahub failed"
 
 msg "-> [] Build seafobj"
 cd "${BUILDPATH}"
