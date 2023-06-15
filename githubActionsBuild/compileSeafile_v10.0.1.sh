@@ -153,6 +153,8 @@ msg "   PYTHONPATH = $PYTHONPATH${OFF}"
 msg "   export THIRDPARTYFOLDER/django/bin to PATH"
 export PATH="${THIRDPARTYFOLDER}/django/bin:${PATH}"
 msg "   PATH = ${PATH}"
+#fixing markupsafe to 2.0.1
+echo "markupsafe==2.0.1" >> "${BUILDPATH}/seafdav/requirements.txt"
 #we do this for seafdav and seahub here once
 (set -x; python3 -m pip install -r "${BUILDPATH}/seafdav/requirements.txt" -r "${BUILDPATH}/seahub/requirements.txt" --target "${THIRDPARTYFOLDER}" --no-cache --upgrade)
 # generate package
