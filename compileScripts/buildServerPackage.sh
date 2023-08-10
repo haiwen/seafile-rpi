@@ -15,7 +15,6 @@ OUTPUT_DIR="../out"
 mkdir $OUTPUT_DIR > /dev/null 2>&1
 cd $OUTPUT_DIR
 OUTPUT_DIR=$(pwd)
-echo $MY_DIR
 cd $MY_DIR
 
 if [ -f "./compileSeafile_v${VERSION}.sh" ];then
