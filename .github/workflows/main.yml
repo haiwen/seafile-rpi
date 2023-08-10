@@ -9,11 +9,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArm64
         run: |
-           ./githubActionsBuild/createBuildImage.sh buster arm64 go1.20.4.linux-arm64.tar.gz
+           ./containerBuilders/createBuildImage.sh buster arm64 go1.20.4.linux-arm64.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh buster arm64
 
       - name: Archive artifacts
@@ -21,7 +21,7 @@ jobs:
         with:
           name: BusterServerPackageArm64
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestBusterArm64:
     needs: BuildBusterArm64
@@ -30,17 +30,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: BusterServerPackageArm64
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArm64
         run: |
-           ./githubActionsBuild/createTestingImage.sh buster arm64
-           ./githubActionsBuild/startServerPackageTest.sh buster arm64
+           ./containerBuilders/createTestingImage.sh buster arm64
+           ./testScripts/startServerPackageTest.sh buster arm64
 
   BuildBusterArmv7:
     runs-on: ubuntu-latest
@@ -49,11 +49,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArmv7
         run: |
-           ./githubActionsBuild/createBuildImage.sh buster arm/v7 go1.20.4.linux-armv6l.tar.gz
+           ./containerBuilders/createBuildImage.sh buster arm/v7 go1.20.4.linux-armv6l.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh buster arm/v7
 
       - name: Archive artifacts
@@ -61,7 +61,7 @@ jobs:
         with:
           name: BusterServerPackageArmv7
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestBusterArmv7:
     needs: BuildBusterArmv7
@@ -70,17 +70,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: BusterServerPackageArmv7
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArmv7
         run: |
-           ./githubActionsBuild/createTestingImage.sh buster arm/v7
-           ./githubActionsBuild/startServerPackageTest.sh buster arm/v7
+           ./containerBuilders/createTestingImage.sh buster arm/v7
+           ./testScripts/startServerPackageTest.sh buster arm/v7
 
   BuildBullseyeArm64:
     runs-on: ubuntu-latest
@@ -89,11 +89,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArm64
         run: |
-           ./githubActionsBuild/createBuildImage.sh bullseye arm64 go1.20.4.linux-arm64.tar.gz
+           ./containerBuilders/createBuildImage.sh bullseye arm64 go1.20.4.linux-arm64.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bullseye arm64
 
       - name: Archive artifacts
@@ -101,7 +101,7 @@ jobs:
         with:
           name: BullseyeServerPackageArm64
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestBullseyeArm64:
     needs: BuildBullseyeArm64
@@ -110,17 +110,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: BullseyeServerPackageArm64
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArm64
         run: |
-           ./githubActionsBuild/createTestingImage.sh bullseye arm64
-           ./githubActionsBuild/startServerPackageTest.sh bullseye arm64
+           ./containerBuilders/createTestingImage.sh bullseye arm64
+           ./testScripts/startServerPackageTest.sh bullseye arm64
 
   BuildBullseyeArmv7:
     runs-on: ubuntu-latest
@@ -129,11 +129,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArmv7
         run: |
-           ./githubActionsBuild/createBuildImage.sh bullseye arm/v7 go1.20.4.linux-armv6l.tar.gz
+           ./containerBuilders/createBuildImage.sh bullseye arm/v7 go1.20.4.linux-armv6l.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bullseye arm/v7
 
       - name: Archive artifacts
@@ -141,7 +141,7 @@ jobs:
         with:
           name: BullseyeServerPackageArmv7
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestBullseyeArmv7:
     needs: BuildBullseyeArmv7
@@ -150,17 +150,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: BullseyeServerPackageArmv7
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArmv7
         run: |
-           ./githubActionsBuild/createTestingImage.sh bullseye arm/v7
-           ./githubActionsBuild/startServerPackageTest.sh bullseye arm/v7
+           ./containerBuilders/createTestingImage.sh bullseye arm/v7
+           ./testScripts/startServerPackageTest.sh bullseye arm/v7
 
   BuildBookwormArm64:
     runs-on: ubuntu-latest
@@ -169,11 +169,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArm64
         run: |
-           ./githubActionsBuild/createBuildImage.sh bookworm arm64 go1.20.4.linux-arm64.tar.gz
+           ./containerBuilders/createBuildImage.sh bookworm arm64 go1.20.4.linux-arm64.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bookworm arm64
 
       - name: Archive artifacts
@@ -181,7 +181,7 @@ jobs:
         with:
           name: BookwormServerPackageArm64
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestBookwormArm64:
     needs: BuildBookwormArm64
@@ -190,17 +190,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: BookwormServerPackageArm64
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArm64
         run: |
-           ./githubActionsBuild/createTestingImage.sh bookworm arm64
-           ./githubActionsBuild/startServerPackageTest.sh bookworm arm64
+           ./containerBuilders/createTestingImage.sh bookworm arm64
+           ./testScripts/startServerPackageTest.sh bookworm arm64
 
   BuildBookwormArmv7:
     runs-on: ubuntu-latest
@@ -209,11 +209,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArmv7
         run: |
-           ./githubActionsBuild/createBuildImage.sh bookworm arm/v7 go1.20.4.linux-armv6l.tar.gz
+           ./containerBuilders/createBuildImage.sh bookworm arm/v7 go1.20.4.linux-armv6l.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bookworm arm/v7
 
       - name: Archive artifacts
@@ -221,7 +221,7 @@ jobs:
         with:
           name: BookwormServerPackageArmv7
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestBookwormArmv7:
     needs: BuildBookwormArmv7
@@ -230,17 +230,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: BookwormServerPackageArmv7
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArmv7
         run: |
-           ./githubActionsBuild/createTestingImage.sh bookworm arm/v7
-           ./githubActionsBuild/startServerPackageTest.sh bookworm arm/v7
+           ./containerBuilders/createTestingImage.sh bookworm arm/v7
+           ./testScripts/startServerPackageTest.sh bookworm arm/v7
 
   BuildFocalArm64:
     runs-on: ubuntu-latest
@@ -249,11 +249,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArm64
         run: |
-           ./githubActionsBuild/createBuildImage.sh focal arm64 go1.20.4.linux-arm64.tar.gz
+           ./containerBuilders/createBuildImage.sh focal arm64 go1.20.4.linux-arm64.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh focal arm64
 
       - name: Archive artifacts
@@ -261,7 +261,7 @@ jobs:
         with:
           name: FocalServerPackageArm64
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestFocalArm64:
     needs: BuildFocalArm64
@@ -270,17 +270,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: FocalServerPackageArm64
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArm64
         run: |
-           ./githubActionsBuild/createTestingImage.sh focal arm64
-           ./githubActionsBuild/startServerPackageTest.sh focal arm64
+           ./containerBuilders/createTestingImage.sh focal arm64
+           ./testScripts/startServerPackageTest.sh focal arm64
 
   BuildFocalArmv7:
     runs-on: ubuntu-latest
@@ -289,11 +289,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArmv7
         run: |
-           ./githubActionsBuild/createBuildImage.sh focal arm/v7 go1.20.4.linux-armv6l.tar.gz
+           ./containerBuilders/createBuildImage.sh focal arm/v7 go1.20.4.linux-armv6l.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh focal arm/v7
 
       - name: Archive artifacts
@@ -301,7 +301,7 @@ jobs:
         with:
           name: FocalServerPackageArmv7
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestFocalArmv7:
     needs: BuildFocalArmv7
@@ -310,17 +310,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: FocalServerPackageArmv7
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArmv7
         run: |
-           ./githubActionsBuild/createTestingImage.sh focal arm/v7
-           ./githubActionsBuild/startServerPackageTest.sh focal arm/v7
+           ./containerBuilders/createTestingImage.sh focal arm/v7
+           ./testScripts/startServerPackageTest.sh focal arm/v7
 
   BuildJammyArm64:
     runs-on: ubuntu-latest
@@ -329,11 +329,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArm64
         run: |
-           ./githubActionsBuild/createBuildImage.sh jammy arm64 go1.20.4.linux-arm64.tar.gz
+           ./containerBuilders/createBuildImage.sh jammy arm64 go1.20.4.linux-arm64.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh jammy arm64
 
       - name: Archive artifacts
@@ -341,7 +341,7 @@ jobs:
         with:
           name: JammyServerPackageArm64
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestJammyArm64:
     needs: BuildJammyArm64
@@ -350,17 +350,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: JammyServerPackageArm64
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArm64
         run: |
-           ./githubActionsBuild/createTestingImage.sh jammy arm64
-           ./githubActionsBuild/startServerPackageTest.sh jammy arm64
+           ./containerBuilders/createTestingImage.sh jammy arm64
+           ./testScripts/startServerPackageTest.sh jammy arm64
 
   BuildJammyArmv7:
     runs-on: ubuntu-latest
@@ -369,11 +369,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - name: BuildPackageArmv7
         run: |
-           ./githubActionsBuild/createBuildImage.sh jammy arm/v7 go1.20.4.linux-armv6l.tar.gz
+           ./containerBuilders/createBuildImage.sh jammy arm/v7 go1.20.4.linux-armv6l.tar.gz
            VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh jammy arm/v7
 
       - name: Archive artifacts
@@ -381,7 +381,7 @@ jobs:
         with:
           name: JammyServerPackageArmv7
           path: |
-            githubActionsBuild/out/**/built-seafile-server-pkgs/*.tar.gz
+            out/**/built-seafile-server-pkgs/*.tar.gz
 
   TestJammyArmv7:
     needs: BuildJammyArmv7
@@ -390,14 +390,14 @@ jobs:
       - uses: actions/checkout@v3
       - name: PrepareHost
         run: |
-           ./githubActionsBuild/prepareHost.sh
+           ./githubActionsHelper/prepareHost.sh
 
       - uses: actions/download-artifact@v3
         with:
           name: JammyServerPackageArmv7
-          path: githubActionsBuild/in
+          path: out
 
       - name: TestingPackageArmv7
         run: |
-           ./githubActionsBuild/createTestingImage.sh jammy arm/v7
-           ./githubActionsBuild/startServerPackageTest.sh jammy arm/v7
+           ./containerBuilders/createTestingImage.sh jammy arm/v7
+           ./testScripts/startServerPackageTest.sh jammy arm/v7

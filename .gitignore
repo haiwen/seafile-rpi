@@ -1,6 +1,5 @@
 # output folders
-githubActionsBuild/in
-githubActionsBuild/out
+out
 
 # MacOS
 .DS_Store

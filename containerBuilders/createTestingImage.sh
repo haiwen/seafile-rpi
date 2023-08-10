@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#script parameters:
+# createTestingImage.sh [distribution] [architecture]
+#e.g.
+# createTestingImage.sh bookworm arm64
+# createTestingImage.sh focal arm/v7
+#
+
 cd $(dirname $0)
 # Register/update emulators
 docker run --rm --privileged tonistiigi/binfmt --install all >/dev/null

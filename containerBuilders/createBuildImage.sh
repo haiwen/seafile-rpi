@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#script parameters:
+# createBuildImage.sh [distribution] [architecture] [GOpackage]
+#e.g.
+# createBuildImage.sh bookworm arm64 go1.20.4.linux-arm64.tar.gz
+# createBuildImage.sh focal arm/v7 go1.20.4.linux-armv6l.tar.gz
+#
+
 cd $(dirname $0)
 # Register/update emulators
 docker run --rm --privileged tonistiigi/binfmt --install all >/dev/null
