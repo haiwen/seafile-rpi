@@ -11,10 +11,11 @@
 # if the compile scripts of this repo were used
 
 cd $(dirname $0)
+MY_DIR=$(pwd)
 PACKAGE_DIR="../out"
 cd $PACKAGE_DIR
 PACKAGE_DIR=$(pwd)
-cd $(dirname $0)
+cd $MY_DIR
 
 if [ -f "./runTest_v${VERSION}.sh" ];then
     cmd="/runTest.sh"
