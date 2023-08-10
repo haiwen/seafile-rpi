@@ -9,16 +9,14 @@
 #
 # the package is output in the directory ../out
 
-ls -lisa
 cd $(dirname $0)
-ls -lisa
+MY_DIR=$(pwd)
 OUTPUT_DIR="../out"
 mkdir $OUTPUT_DIR > /dev/null 2>&1
 cd $OUTPUT_DIR
-ls -lisa
 OUTPUT_DIR=$(pwd)
-ls -lisa
-cd $(dirname $0)
+echo $MY_DIR
+cd $MY_DIR
 
 if [ -f "./compileSeafile_v${VERSION}.sh" ];then
     cmd="/compileSeafile.sh && chown -R $(id -u):$(id -g) /built-seafile-server-pkgs"
