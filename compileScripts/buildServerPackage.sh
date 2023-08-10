@@ -9,11 +9,15 @@
 #
 # the package is output in the directory ../out
 
+ls -lisa
 cd $(dirname $0)
+ls -lisa
 OUTPUT_DIR="../out"
 mkdir $OUTPUT_DIR > /dev/null 2>&1
 cd $OUTPUT_DIR
+ls -lisa
 OUTPUT_DIR=$(pwd)
+ls -lisa
 cd $(dirname $0)
 
 if [ -f "./compileSeafile_v${VERSION}.sh" ];then
@@ -29,7 +33,7 @@ docker run --rm \
     --platform linux/${2} \
     -m 6192M \
     --pull missing \
-    -v "./compileSeafile_${USESCRIPT}.sh":/compileSeafile.sh \
+    --mount type=bind,src="./compileSeafile_${USESCRIPT}.sh",dst="/compileSeafile.sh" \
     -v "$OUTPUT_DIR/${2}/built-seafile-server-pkgs":/built-seafile-server-pkgs \
     seafile-builder:${1} /bin/bash -c "$cmd"
 
