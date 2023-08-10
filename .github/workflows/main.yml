@@ -14,7 +14,7 @@ jobs:
       - name: BuildPackageArm64
         run: |
            ./containerBuilders/createBuildImage.sh buster arm64 go1.20.4.linux-arm64.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh buster arm64
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh buster arm64
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -54,7 +54,7 @@ jobs:
       - name: BuildPackageArmv7
         run: |
            ./containerBuilders/createBuildImage.sh buster arm/v7 go1.20.4.linux-armv6l.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh buster arm/v7
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh buster arm/v7
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -94,7 +94,7 @@ jobs:
       - name: BuildPackageArm64
         run: |
            ./containerBuilders/createBuildImage.sh bullseye arm64 go1.20.4.linux-arm64.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bullseye arm64
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh bullseye arm64
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -134,7 +134,7 @@ jobs:
       - name: BuildPackageArmv7
         run: |
            ./containerBuilders/createBuildImage.sh bullseye arm/v7 go1.20.4.linux-armv6l.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bullseye arm/v7
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh bullseye arm/v7
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -174,7 +174,7 @@ jobs:
       - name: BuildPackageArm64
         run: |
            ./containerBuilders/createBuildImage.sh bookworm arm64 go1.20.4.linux-arm64.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bookworm arm64
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh bookworm arm64
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -214,7 +214,7 @@ jobs:
       - name: BuildPackageArmv7
         run: |
            ./containerBuilders/createBuildImage.sh bookworm arm/v7 go1.20.4.linux-armv6l.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh bookworm arm/v7
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh bookworm arm/v7
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -254,7 +254,7 @@ jobs:
       - name: BuildPackageArm64
         run: |
            ./containerBuilders/createBuildImage.sh focal arm64 go1.20.4.linux-arm64.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh focal arm64
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh focal arm64
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -294,7 +294,7 @@ jobs:
       - name: BuildPackageArmv7
         run: |
            ./containerBuilders/createBuildImage.sh focal arm/v7 go1.20.4.linux-armv6l.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh focal arm/v7
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh focal arm/v7
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -334,7 +334,7 @@ jobs:
       - name: BuildPackageArm64
         run: |
            ./containerBuilders/createBuildImage.sh jammy arm64 go1.20.4.linux-arm64.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh jammy arm64
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh jammy arm64
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -374,7 +374,7 @@ jobs:
       - name: BuildPackageArmv7
         run: |
            ./containerBuilders/createBuildImage.sh jammy arm/v7 go1.20.4.linux-armv6l.tar.gz
-           VERSION=10.0.1 ./githubActionsBuild/buildServerPackage.sh jammy arm/v7
+           VERSION=10.0.1 ./compileScripts/buildServerPackage.sh jammy arm/v7
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
