@@ -6,12 +6,12 @@ Seafile server package for Raspberry Pi. Maintained by seafile community.
 
 ## Build
 
-E.g. to compile Seafile server v10.0.1:
+E.g. to compile Seafile server v11.0.5:
 
 ```shell
 $ wget https://raw.githubusercontent.com/haiwen/seafile-rpi/master/build.sh
 $ chmod u+x build.sh
-$ sudo ./build.sh -DTA -v 10.0.1 -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v10.0.1.txt -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v10.0.1.txt
+$ sudo ./build.sh -DTA -v 11.0.5 -h https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seahub_requirements_v11.0.5.txt -d https://raw.githubusercontent.com/haiwen/seafile-rpi/master/requirements/seafdav_requirements_v11.0.5.txt
 ```
 
 Calling `./build.sh` without arguments will return usage information and a list of all available arguments:
@@ -26,28 +26,29 @@ Usage:
     -D          Install build dependencies
     -T          Install thirdparty requirements
 
-    -1          Build/update libevhtp
-    -2          Build/update libsearpc
-    -3          Build/update seafile (c_fileserver)
-    -4          Build/update seafile (go_fileserver)
-    -5          Build/update seafile (notification_server)
+    -0          Build/update libevhtp
+    -1          Build/update libsearpc
+    -2          Build/update seafile (c_fileserver)
+    -3          Build/update seafile (go_fileserver)
+    -4          Build/update seafile (notification_server)
+    -5          Fetch/update seafevents
     -6          Build/update seahub
     -7          Build/update seafobj
     -8          Build/update seafdav
     -9          Build/update Seafile server
 
-    -A          All options -1 to -9 in one go
+    -A          All options -0 to -9 in one go
 
     -v <vers>   Set seafile server version to build
-                default: 10.0.1
+                default: 11.0.5
     -r <vers>   Set libsearpc version
                 default: 3.3-latest
     -f <vers>   Set fixed libsearpc version
                 default: 3.1.0
     -h <vers>   Set python requirement file for seahub
-                default: https://raw.githubusercontent.com/haiwen/seahub/v10.0.1-server/requirements.txt
+                default: https://raw.githubusercontent.com/haiwen/seahub/v11.0.5-server/requirements.txt
     -d <vers>   Set python requirement file for seafdav
-                default: https://raw.githubusercontent.com/haiwen/seafdav/v10.0.1-server/requirements.txt
+                default: https://raw.githubusercontent.com/haiwen/seafdav/v11.0.5-server/requirements.txt
 
     use --version for version info of this script.
 ```
@@ -55,20 +56,20 @@ Usage:
 Schema of created directory structure after execution of `./build.sh`:
 
 ```
-seafile@rpi-focal:~$ tree . -L 3
+seafile@rpi-jammy:~$ tree . -L 3
 .
 ├── build.sh
-├── build-server.py.patch
 ├── built-seafile-server-pkgs
-│   └── seafile-server-10.0.1-focal-armv7l.tar.gz
+│   └── seafile-server-11.0.5-jammy-armv7l.tar.gz
 ├── built-seafile-sources
-│   └── R10.0.1
+│   └── R11.0.5
 ├── go
 │   └── pkg
 ├── haiwen-build
 │   ├── libevhtp
 │   ├── libsearpc
 │   ├── seafdav
+│   ├── seafevents
 │   ├── seafile-server
 │   ├── seafobj
 │   ├── seahub
