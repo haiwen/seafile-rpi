@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ "$1" =~ ^(--version)$ ]] && {
-    echo "2023-05-13";
+    echo "2024-03-06";
     exit 0
 };
 
@@ -22,12 +22,13 @@ PREFIX="${HOME}/opt/local"
 
 LIBSEARPC_VERSION_LATEST="3.3-latest" # check if new tag is available on https://github.com/haiwen/libsearpc/releases
 LIBSEARPC_VERSION_FIXED="3.1.0" # libsearpc sticks to 3.1.0 https://github.com/haiwen/libsearpc/commit/43d768cf2eea6afc6e324c2b1a37a69cd52740e3
-VERSION="10.0.1"
+VERSION="11.0.5"
 VERSION_SEAFILE="6.0.1" # dummy version for seafile (see configure.ac)
 MYSQL_CONFIG_PATH="/usr/bin/mysql_config" # ensure compilation with mysql support
 
 VERSION_TAG="v${VERSION}-server"
 LIBSEARPC_TAG="v${LIBSEARPC_VERSION_LATEST}"
+LIBEVHTP_TAG="1.1.6" # see https://forum.seafile.com/t/libevhtp-version-in-build-script/19316
 PYTHON_REQUIREMENTS_URL_SEAHUB="https://raw.githubusercontent.com/haiwen/seahub/${VERSION_TAG}/requirements.txt"  # official requirements.txt file
 PYTHON_REQUIREMENTS_URL_SEAFDAV="https://raw.githubusercontent.com/haiwen/seafdav/${VERSION_TAG}/requirements.txt"
 
@@ -41,6 +42,7 @@ CONF_BUILD_LIBSEARPC=false
 CONF_BUILD_SEAFILE=false
 CONF_BUILD_SEAFILE_GO_FILESERVER=false
 CONF_BUILD_SEAFILE_NOTIFICATION_SERVER=false
+CONF_FETCH_SEAFEVENTS=false
 CONF_BUILD_SEAHUB=false
 CONF_BUILD_SEAFOBJ=false
 CONF_BUILD_SEAFDAV=false
@@ -105,11 +107,12 @@ Usage:
     ${TXT_BOLD}-D${OFF}          Install build dependencies
     ${TXT_BOLD}-T${OFF}          Install thirdparty requirements
 
-    ${TXT_BOLD}-1${OFF}          Build/update libevhtp
-    ${TXT_BOLD}-2${OFF}          Build/update libsearpc
-    ${TXT_BOLD}-3${OFF}          Build/update seafile (c_fileserver)
-    ${TXT_BOLD}-4${OFF}          Build/update seafile (go_fileserver)
-    ${TXT_BOLD}-5${OFF}          Build/update seafile (notification_server)
+    ${TXT_BOLD}-0${OFF}          Build/update libevhtp
+    ${TXT_BOLD}-1${OFF}          Build/update libsearpc
+    ${TXT_BOLD}-2${OFF}          Build/update seafile (c_fileserver)
+    ${TXT_BOLD}-3${OFF}          Build/update seafile (go_fileserver)
+    ${TXT_BOLD}-4${OFF}          Build/update seafile (notification_server)
+    ${TXT_BOLD}-5${OFF}          Fetch/update seafevents
     ${TXT_BOLD}-6${OFF}          Build/update seahub
     ${TXT_BOLD}-7${OFF}          Build/update seafobj
     ${TXT_BOLD}-8${OFF}          Build/update seafdav
@@ -134,7 +137,7 @@ Usage:
 fi
 
 # get the options
-while getopts ":123456789ADTv:r:f:h:d:" OPT; do
+while getopts ":0123456789ADTv:r:f:h:d:" OPT; do
     case $OPT in
         D) CONF_INSTALL_DEPENDENCIES=true >&2
            STEPS=$((STEPS+1)) >&2
@@ -142,26 +145,31 @@ while getopts ":123456789ADTv:r:f:h:d:" OPT; do
         T) CONF_INSTALL_THIRDPART=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        1) CONF_BUILD_LIBEVHTP=true >&2
+        0) CONF_BUILD_LIBEVHTP=true >&2
            PREP_BUILD=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        2) CONF_BUILD_LIBSEARPC=true >&2
-           PREP_BUILD=true >&2
-           COPY_PKG_SOURCE=true >&2
-           STEPS=$((STEPS+1)) >&2
-           ;;
-        3) CONF_BUILD_SEAFILE=true >&2
+        1) CONF_BUILD_LIBSEARPC=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        4) CONF_BUILD_SEAFILE_GO_FILESERVER=true >&2
+        2) CONF_BUILD_SEAFILE=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
            ;;
-        5) CONF_BUILD_SEAFILE_NOTIFICATION_SERVER=true >&2
+        3) CONF_BUILD_SEAFILE_GO_FILESERVER=true >&2
+           PREP_BUILD=true >&2
+           COPY_PKG_SOURCE=true >&2
+           STEPS=$((STEPS+1)) >&2
+           ;;
+        4) CONF_BUILD_SEAFILE_NOTIFICATION_SERVER=true >&2
+           PREP_BUILD=true >&2
+           COPY_PKG_SOURCE=true >&2
+           STEPS=$((STEPS+1)) >&2
+           ;;
+        5) CONF_FETCH_SEAFEVENTS=true >&2
            PREP_BUILD=true >&2
            COPY_PKG_SOURCE=true >&2
            STEPS=$((STEPS+1)) >&2
@@ -222,6 +230,7 @@ while getopts ":123456789ADTv:r:f:h:d:" OPT; do
     esac
 done
 
+SRCDIR="${SCRIPTPATH}/${PKGSOURCEDIR}/R${VERSION}"
 
 # set counter accordingly
 ${PREP_BUILD} && STEPS=$((STEPS+2))
@@ -326,9 +335,9 @@ build_libevhtp()
     cd libevhtp
     (set -x; make clean)
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${LIBEVHTP_TAG}")
   else
-    (set -x; git clone "https://www.github.com/haiwen/libevhtp.git")
+    (set -x; git clone --depth 1 --branch "${LIBEVHTP_TAG}" "https://www.github.com/haiwen/libevhtp.git")
     cd libevhtp
   fi
   (set -x; cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DEVHTP_DISABLE_SSL=ON -DEVHTP_BUILD_SHARED=OFF .)
@@ -369,12 +378,11 @@ build_libsearpc()
     cd libsearpc
     (set -x; make clean && make distclean)
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${LIBSEARPC_TAG}")
   else
-    (set -x; git clone "https://github.com/haiwen/libsearpc.git")
+    (set -x; git clone --depth 1 --branch "${LIBSEARPC_TAG}" "https://github.com/haiwen/libsearpc.git")
     cd libsearpc
   fi
-  (set -x; git reset --hard "${LIBSEARPC_TAG}")
   (set -x; ./autogen.sh)
   (set -x; ./configure)
   (set -x; make dist)
@@ -396,12 +404,11 @@ build_seafile()
     cd seafile-server
     (set -x; make clean && make distclean)
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${VERSION_TAG}")
   else
-    (set -x; git clone "https://github.com/haiwen/seafile-server.git")
+    (set -x; git clone --depth 1 --branch "${VERSION_TAG}" "https://github.com/haiwen/seafile-server.git")
     cd seafile-server
   fi
-  (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; ./autogen.sh)
   (set -x; ./configure --with-mysql=${MYSQL_CONFIG_PATH} --enable-ldap)
   (set -x; make dist)
@@ -423,12 +430,11 @@ build_seafile_go_fileserver()
     cd seafile-server
     (set -x; make clean && make distclean)
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${VERSION_TAG}")
   else
-    (set -x; git clone "https://github.com/haiwen/seafile-server.git")
+    (set -x; git clone --depth 1 --branch "${VERSION_TAG}" "https://github.com/haiwen/seafile-server.git")
     cd seafile-server
   fi
-  (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; cd fileserver && go build .)
   exitonfailure "Build seafile-server (go_fileserver) failed"
   cd "${SCRIPTPATH}"
@@ -448,12 +454,11 @@ build_seafile_notification_server()
     cd seafile-server
     (set -x; make clean && make distclean)
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${VERSION_TAG}")
   else
-    (set -x; git clone "https://github.com/haiwen/seafile-server.git")
+    (set -x; git clone --depth 1 --branch "${VERSION_TAG}" "https://github.com/haiwen/seafile-server.git")
     cd seafile-server
   fi
-  (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; cd notification-server && go build .)
   exitonfailure "Build seafile-server (notification_server) failed"
   cd "${SCRIPTPATH}"
@@ -491,11 +496,12 @@ install_thirdparty()
     fi
   fi
 
-  # While pip alone is sufficient to install from pre-built binary archives, up to date copies of the setuptools and wheel projects are useful to ensure we can also install from source archives
-  # e.g. default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
-  # script executed like as seafile user, therefore pip upgrade only for seafile user, not system wide; pip installation goes to /home/seafile/.local/lib/python3.6/site-packages
-  msg "   Download and update pip(3), setuptools and wheel from PyPI"
-  (set -x; python3 -m pip install --user --upgrade pip setuptools wheel)
+  # outdated
+  #   # While pip alone is sufficient to install from pre-built binary archives, up to date copies of the setuptools and wheel projects are useful to ensure we can also install from source archives
+  #   # e.g. default shipped pip=9.0.1 in Ubuntu Bionic => need update to pip=20.*
+  #   # script executed like as seafile user, therefore pip upgrade only for seafile user, not system wide; pip installation goes to /home/seafile/.local/lib/python3.6/site-packages
+  #   msg "   Download and update pip(3), setuptools and wheel from PyPI"
+  #   (set -x; python3 -m pip install --user --upgrade pip setuptools wheel)
 
   mkmissingdir "${THIRDPARTYFOLDER}"
 
@@ -506,10 +512,23 @@ install_thirdparty()
 
   # get SeafDAV thirdparty requirements directly from Github
   msg "   Get SeafDAV thirdparty requirements directly from GitHub"
-  (set -x; wget "$PYTHON_REQUIREMENTS_URL_SEAFDAV" -O "${THIRDPARTYFOLDER}/requirements_SeafDAV.txt")
+  (set -x; wget "$PYTHON_REQUIREMENTS_URL_SEAFDAV" -O ->> "${THIRDPARTYFOLDER}/requirements.txt")
   exitonfailure "Unable to get Seafdav requirements"
-  # merge seahub and seafdav requirements in one file
-  (set -x; cat "${THIRDPARTYFOLDER}/requirements_SeafDAV.txt" >> "${THIRDPARTYFOLDER}/requirements.txt")
+
+  # seafdav ignore
+  sed -i 's/Jinja2/# Jinja2/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/sqlalchemy/# sqlalchemy/' "${THIRDPARTYFOLDER}/requirements.txt"
+
+  # seahub ignore
+  sed -i 's/django_simple_captcha/# django_simple_captcha/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/^captcha/# captcha/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/mysqlclient/# mysqlclient/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/pillow/# pillow/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/pycryptodome/# pycryptodome/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/djangosaml2/# djangosaml2/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/pysaml2/# pysaml2/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/cffi/# cffi/' "${THIRDPARTYFOLDER}/requirements.txt"
+  sed -i 's/python-ldap/# python-ldap/' "${THIRDPARTYFOLDER}/requirements.txt"
 
   # install Seahub and SeafDAV thirdparty requirements
   # on pip=20.* DEPRECATION: --install-option: ['--install-lib', '--install-scripts']
@@ -519,8 +538,30 @@ install_thirdparty()
 
   # clean up
   msg "   Clean up"
-  rm "${THIRDPARTYFOLDER}/requirements.txt" "${THIRDPARTYFOLDER}/requirements_SeafDAV.txt"
+  rm "${THIRDPARTYFOLDER}/requirements.txt"
   rm -rf $(find . -name "__pycache__")
+}
+
+#
+# FETCH seafevents
+#
+
+fetch_seafevents()
+{
+  STEPCOUNTER=$((STEPCOUNTER+1))
+  msg "-> [${STEPCOUNTER}/${STEPS}] Fetch seafevents"
+
+  # get source code
+  cd "${BUILDPATH}"
+  if [ -d "seafevents" ]; then
+    cd seafevents
+    (set -x; make clean)
+    (set -x; git fetch origin --tags)
+    (set -x; git reset --hard "${VERSION_TAG}")
+  else
+    (set -x; git clone --depth 1 --branch "${VERSION_TAG}" "https://github.com/haiwen/seafevents.git")
+  fi
+  cd "${SCRIPTPATH}"
 }
 
 #
@@ -538,12 +579,11 @@ build_seahub()
     cd seahub
     (set -x; make clean)
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${VERSION_TAG}")
   else
-    (set -x; git clone "https://github.com/haiwen/seahub.git")
+    (set -x; git clone --depth 1 --branch "${VERSION_TAG}" "https://github.com/haiwen/seahub.git")
     cd seahub
   fi
-  (set -x; git reset --hard "${VERSION_TAG}")
 
   # export ${THIRDPARTYFOLDER} to ${PATH}
   msg "   Export THIRDPARTYFOLDER to PATH"
@@ -582,12 +622,11 @@ build_seafobj()
   if [ -d "seafobj" ]; then
     cd seafobj
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${VERSION_TAG}")
   else
-    (set -x; git clone "https://github.com/haiwen/seafobj.git")
+    (set -x; git clone --depth 1 --branch "${VERSION_TAG}" "https://github.com/haiwen/seafobj.git")
     cd seafobj
   fi
-  (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; make dist)
   exitonfailure "Build seafobj failed"
   cd "${SCRIPTPATH}"
@@ -606,12 +645,11 @@ build_seafdav()
   if [ -d "seafdav" ]; then
     cd seafdav
     (set -x; git fetch origin --tags)
-    (set -x; git reset --hard origin/master)
+    (set -x; git reset --hard "${VERSION_TAG}")
   else
-    (set -x; git clone "https://github.com/haiwen/seafdav.git")
+    (set -x; git clone --depth 1 --branch "${VERSION_TAG}" "https://github.com/haiwen/seafdav.git")
     cd seafdav
   fi
-  (set -x; git reset --hard "${VERSION_TAG}")
   (set -x; make)
   exitonfailure "Build seafdav failed"
   cd "${SCRIPTPATH}"
@@ -626,7 +664,7 @@ copy_pkg_source()
   STEPCOUNTER=$((STEPCOUNTER+1))
   msg "-> [${STEPCOUNTER}/${STEPS}] Copy sources to ${PKGSOURCEDIR}/R${VERSION} "
 
-  mkmissingdir "${SCRIPTPATH}/${PKGSOURCEDIR}/R${VERSION}"
+  mkmissingdir "${SRCDIR}"
   for i in \
       "${BUILDPATH}/libsearpc/libsearpc-${LIBSEARPC_VERSION_FIXED}.tar.gz" \
       "${BUILDPATH}/seafile-server/seafile-${VERSION_SEAFILE}.tar.gz" \
@@ -636,8 +674,10 @@ copy_pkg_source()
       "${BUILDPATH}/seafobj/seafobj.tar.gz" \
       "${BUILDPATH}/seafdav/seafdav.tar.gz"
   do
-      [ -f "$i" ] && (set -x; cp "$i" "${SCRIPTPATH}/${PKGSOURCEDIR}/R${VERSION}")
+      [ -f "$i" ] && (set -x; cp "$i" "${SRCDIR}")
   done
+  # seafevents is a directory
+  [ -d "${BUILDPATH}/seafevents" ] && (set -x; cp -r "${BUILDPATH}/seafevents" "${SRCDIR}")
 }
 
 #
@@ -652,15 +692,115 @@ build_server()
   cd "${BUILDPATH}"
   mkmissingdir "${SCRIPTPATH}/${PKGDIR}"
 
+  if [[ ! $(grep "copy_pro_libs()" "${BUILDPATH}/seahub/scripts/build/build-server.py") && "${VERSION}" > "10.0.9" ]] ; then
+  msg "-> Patch build-server.py (v11.x)"
+  patch -N -b -u "${BUILDPATH}/seahub/scripts/build/build-server.py" <<'EOF'
+--- build-server.py.old 2024-03-04 13:34:33.157602953 +0100
++++ build-server.py     2024-03-04 13:41:03.379911457 +0100
+@@ -139,6 +139,34 @@
+     except Exception as e:
+         error('failed to copy %s to %s: %s' % (src, dst, e))
+ 
++def must_copytree(src, dst, with_hidden=False):
++    '''must_copytree(a, b) copies every file/dir under a/ to b/'''
++    pattern = os.path.join(src, '*')
++    try:
++        for path in glob.glob(pattern):
++            target_path = os.path.join(dst, os.path.basename(path))
++            if os.path.isdir(path):
++                shutil.copytree(path, target_path, ignore=shutil.ignore_patterns(
++                    '.git', '__pycache__', '*.pyc'))
++            else:
++                shutil.copy(path, target_path)
++    except Exception as e:
++        error('failed to copy seahub thirdpart libs: %s' % e)
++
++    if with_hidden:
++        # for hidden dir: .libs_pylibmc
++        hidden_pattern = os.path.join(src, '.*')
++        try:
++            for path in glob.glob(hidden_pattern):
++                target_path = os.path.join(dst, os.path.basename(path))
++                if os.path.isdir(path):
++                    shutil.copytree(path, target_path, ignore=shutil.ignore_patterns(
++                        '.git', '__pycache__', '*.pyc'))
++                else:
++                    shutil.copy(path, target_path)
++        except Exception as e:
++            error('failed to copy seahub thirdpart hidden libs: %s' % e)
++
+ class Project(object):
+     '''Base class for a project'''
+     # Project name, i.e. libseaprc/seafile/seahub
+@@ -558,6 +586,38 @@
+ 
+     must_copy(src_notification_server, dst_bin_dir)
+ 
++def copy_pro_libs():
++    '''Copy pro.py and python libs for Seafile Professional to
++    seafile-server/pro
++
++    '''
++    builddir = conf[CONF_BUILDDIR]
++    pro_program_dir = os.path.join(builddir, 'seafile-server', 'pro')
++    if not os.path.exists(pro_program_dir):
++        must_mkdir(pro_program_dir)
++
++    pro_misc_dir = os.path.join(pro_program_dir, 'misc')
++    if not os.path.exists(pro_misc_dir):
++        must_mkdir(pro_misc_dir)
++
++    pro_libs_dir = os.path.join(pro_program_dir, 'python')
++    must_mkdir(pro_libs_dir)
++
++    pro_py = os.path.join(builddir, 'seafile-server', 'seahub', 'scripts', 'pro.py')
++    must_copy(pro_py, pro_program_dir)
++
++    copy_seafevents()
++
++# copy seafevents to directory seafile-server/pro/python
++def copy_seafevents():
++    builddir = conf[CONF_BUILDDIR]
++    pro_libs_dir = os.path.join(builddir, 'seafile-server', 'pro', 'python')
++    must_mkdir(os.path.join(pro_libs_dir, 'seafevents'))
++
++    events_dir = os.path.join(conf[CONF_SRCDIR], 'seafevents')
++
++    must_copytree(events_dir, os.path.join(pro_libs_dir, 'seafevents'))
++
+ def copy_seafdav():
+     dst_dir = os.path.join(conf[CONF_BUILDDIR], 'seafile-server', 'seahub', 'thirdpart')
+     tarball = os.path.join(conf[CONF_SRCDIR], 'seafdav.tar.gz')
+@@ -636,6 +668,8 @@
+     copy_seahub_thirdpart_libs(seahub_thirdpart)
+     copy_seafdav()
+ 
++    # copy pro libs
++    copy_pro_libs()
+ 
+     # copy_pdf2htmlex()
+
+@@ -815,7 +877,7 @@
+     # tar will copy the content the directory python3.[0-9]+/ to python3/
+     transform = '--transform=\'s,python3\.[0-9]\+/,python3/,\''
+ 
+-    tar_cmd = 'tar czf %(tarball_name)s %(transform)s %(versioned_serverdir)s %(excludes)s' \
++    tar_cmd = 'tar czf %(tarball_name)s %(transform)s %(excludes)s %(versioned_serverdir)s' \
+               % dict(tarball_name=tarball_name,
+                      versioned_serverdir=versioned_serverdir,
+                      excludes=excludes,
+EOF
+  elif [[ "${VERSION}" == "10.0.1" ]] ; then
   # TODO: remove at seafile 10.0.2 release
-  msg "-> Patch build-server.py"
-  echo "--- build-server.py.old	2023-04-23 17:26:19.233328609 +0200
+  msg "-> Patch build-server.py (v10.0.1)"
+  patch -N -b -u "${BUILDPATH}/seahub/scripts/build/build-server.py" <<'EOF'
+--- build-server.py.old	2023-04-23 17:26:19.233328609 +0200
 +++ build-server.py	2023-04-23 17:22:58.625726460 +0200
 @@ -549,6 +549,15 @@
  
      must_copy(src_go_fileserver, dst_bin_dir)
  
-+# copy notification_server "notification-server" to directory seafile-server/seafile/bin
++# copy notification_server \"notification-server\" to directory seafile-server/seafile/bin
 +def copy_notification_server():
 +    builddir = conf[CONF_BUILDDIR]
 +    srcdir = conf[CONF_SRCDIR]
@@ -690,7 +830,9 @@ build_server()
 +
  def copy_pdf2htmlex():
      '''Copy pdf2htmlEX exectuable and its dependent libs'''
-     pdf2htmlEX_executable = find_in_path('pdf2htmlEX')" | patch -N -b -u "${BUILDPATH}/seahub/scripts/build/build-server.py"
+     pdf2htmlEX_executable = find_in_path('pdf2htmlEX')
+EOF
+  fi
 
   msg "-> Executing build-server.py"
   (set -x; python3 "${BUILDPATH}/seahub/scripts/build/build-server.py" \
@@ -698,7 +840,7 @@ build_server()
     --seafile_version="${VERSION_SEAFILE}" \
     --version="${VERSION}" \
     --thirdpartdir="${THIRDPARTYFOLDER}" \
-    --srcdir="${SCRIPTPATH}/${PKGSOURCEDIR}/R${VERSION}" \
+    --srcdir="${SRCDIR}" \
     --mysql_config="${MYSQL_CONFIG_PATH}" \
     --outputdir="${SCRIPTPATH}/${PKGDIR}" \
     --yes)
@@ -734,6 +876,7 @@ ${CONF_BUILD_LIBSEARPC} && build_libsearpc
 ${CONF_BUILD_SEAFILE} && build_seafile
 ${CONF_BUILD_SEAFILE_GO_FILESERVER} && build_seafile_go_fileserver
 ${CONF_BUILD_SEAFILE_NOTIFICATION_SERVER} && build_seafile_notification_server
+${CONF_FETCH_SEAFEVENTS} && fetch_seafevents
 ${CONF_BUILD_SEAHUB} && build_seahub
 ${CONF_BUILD_SEAFOBJ} && build_seafobj
 ${CONF_BUILD_SEAFDAV} && build_seafdav
